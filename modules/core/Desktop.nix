@@ -8,6 +8,7 @@
       cdemu.enable = true;
       gnupg.agent.enable=true;
       thunar.enable = true;
+      kdeconnect.enable = true;
     };
 
 
