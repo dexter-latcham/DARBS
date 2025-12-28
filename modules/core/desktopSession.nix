@@ -1,5 +1,6 @@
 {pkgs, username, ... }:
 {
+  imports = [./suckless];
     programs = {
       slock.enable = true;
       steam.enable = true;
@@ -7,6 +8,7 @@
       cdemu.enable = true;
       gnupg.agent.enable=true;
       thunar.enable = true;
+      kdeconnect.enable = true;
     };
 
   services = {
