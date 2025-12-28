@@ -7,30 +7,26 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-
-  outputs = { self, nixpkgs, ...}:
+  outputs = { self, nixpkgs, ...}@inputs:
   let
-    inherit (nixpkgs.lib) nixosSystem genAttrs replaceStrings;
-    inherit (nixpkgs.lib.filesystem) packagesFromDirectoryRecursive listFilesRecursive;
-    nameOf = path: replaceStrings [ ".nix" ] [ "" ] (baseNameOf (toString path));
+      username = "dex";
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      lib = nixpkgs.lib;
   in
   {
-    nixosModules = genAttrs (map nameOf (listFilesRecursive ./modules)) (
-        name: import ./modules/${name}.nix
-    );
-
-    homeModules = genAttrs (map nameOf (listFilesRecursive ./home)) (name: import ./home/${name}.nix);
-
-    overlays = genAttrs (map nameOf (listFilesRecursive ./overlays)) (
-        name: import ./overlays/${name}.nix
-    );
-
-    nixosConfigurations.nixtop = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs.myConfig=self;
-      modules = listFilesRecursive ./me;
+    nixosConfigurations = {
+      nixtop = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [./hosts/laptop];
+        specialArgs = {
+            host = "nixtop";
+            inherit self inputs username;
+        };
+      };
     };
-
-    formatter = (pkgs: pkgs.nixfmt-rfc-style);
   };
 }

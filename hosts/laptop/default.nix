@@ -1,4 +1,4 @@
-{ config, lib, pkgs, myConfig,... }:
+{pkgs, ... }:
 with pkgs; let
   patchDesktop = pkg: appName: from: to: lib.hiPrio (
     pkgs.runCommand "$patched-desktop-entry-for-${appName}" {} ''
@@ -6,17 +6,11 @@ with pkgs; let
       ${gnused}/bin/sed 's#${from}#${to}#g' < ${pkg}/share/applications/${appName}.desktop > $out/share/applications/${appName}.desktop
       '');
   GPUOffloadApp = pkg: desktopName: patchDesktop pkg desktopName "^Exec=" "Exec=nvidia-offload ";
-inherit (builtins) attrValues;
 in
 {
-
-
-
-
-  imports = attrValues myConfig.nixosModules;
-  nixpkgs.overlays = attrValues myConfig.overlays;
-  home-manager.sharedModules = attrValues myConfig.homeModules;
-
+  imports = [./hardware-configuration.nix
+    ./../../modules/core
+  ];
 
   environment.systemPackages = with pkgs; [
     (GPUOffloadApp steam "steam")
@@ -32,10 +26,10 @@ in
       libvdpau-va-gl
     ];
   };
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
 
-    environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
 
-
+  hardware.bluetooth.enable = true;
   hardware.nvidia = {
     modesetting.enable=true;
     open = false;
@@ -49,14 +43,13 @@ in
       nvidiaBusId = "PCI:01:00:0";
     };
   };
+
   services.xserver.videoDrivers = ["nvidia"];
 
-nixpkgs.config.permittedInsecurePackages = [
-"qtwebengine-5.15.19"
-];
-
-  nixpkgs.config.allowUnfree=true;
-
-  security.polkit.enable = true;
-
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+  };
 }

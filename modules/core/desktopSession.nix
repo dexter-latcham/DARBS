@@ -1,7 +1,5 @@
-{ pkgs, config, lib, ... }:
+{pkgs, username, ... }:
 {
-  config = {
-
     programs = {
       slock.enable = true;
       steam.enable = true;
@@ -11,49 +9,29 @@
       thunar.enable = true;
     };
 
-
-
-    services = {
-      pipewire = {
-        enable = true;
-
-        alsa = {
-          enable = true;
-          support32Bit = true;
-        };
-
-        pulse.enable = true;
+  services = {
+    displayManager.ly.enable=true;
+    xserver = {
+      enable=true;
+      autoRepeatDelay=200;
+      autoRepeatInterval=35;
+      windowManager.qtile.enable=true;
+      windowManager.dwm.enable=true;
+      xkb = {
+        layout="gb";
+        variant="";
       };
-
-      udisks2 = {
-        enable = true;
-        mountOnMedia = true;
-      };
-
-      displayManager.ly.enable=true;
-
-      xserver = {
-        enable=true;
-        autoRepeatDelay=200;
-        autoRepeatInterval=35;
-        windowManager.qtile.enable=true;
-        windowManager.dwm.enable=true;
-        xkb = {
-          layout="gb";
-          variant="";
-        };
-      };
-
-      picom = {
-        enable = true;
-        backend="glx";
-        vSync = true;
-      };
-
-      gnome.gnome-keyring.enable = true;
-      upower.enable = true;
     };
 
+    picom = {
+      enable = true;
+      backend="glx";
+      vSync = true;
+    };
+  };
+  nixpkgs.config.permittedInsecurePackages = [
+  "qtwebengine-5.15.19"
+  ];
     environment.systemPackages = with pkgs; [
       xwallpaper
       pywal
@@ -100,6 +78,5 @@ google-chrome
     arandr
     st
     ];
-  };
 
 }
