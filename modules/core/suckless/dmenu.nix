@@ -61,6 +61,7 @@ in
       src = builtins.path {
         path = ./dmenu;
       };
+      buildInputs = oldAttrs.buildInputs ++ [libspng];
     }
     ))
   ];
