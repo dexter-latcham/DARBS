@@ -38,6 +38,7 @@ let
 in
 {
   environment.systemPackages = with pkgs;[
+  	maim
   	screenshotScript
   	pwrMgrScript
   ];

@@ -2,7 +2,7 @@
 {
   xresources.extraConfig = ''
 !! Transparency (0-1):
-*.alpha: 1
+*.alpha: 0.8
 
 !! Set a default font and font size as below:
 *.font: monospace:size=10

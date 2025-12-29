@@ -111,6 +111,7 @@
       typos
       gallery-dl
       awscli2
+      ripgrep
     ];
   };
 
