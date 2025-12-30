@@ -30,10 +30,12 @@ enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
 
 struct item {
 	char *text;
-	unsigned int width;
+	char *image_path;
 	struct item *left, *right;
 	int out;
 	double distance;
+	int imageWidth;
+	int imageHeight;
 };
 
 static char text[BUFSIZ] = "";
@@ -48,7 +50,6 @@ static struct item *matches, *matchend;
 static struct item *prev, *curr, *next, *sel;
 static int mon = -1, screen;
 static char *image_prefix = "PNG_IMAGE:";
-static int image_size = -1; /* in pixels */
 
 static Atom clip, utf8;
 static Display *dpy;
@@ -64,24 +65,10 @@ static int (*fstrncmp)(const char *, const char *, size_t) = strncmp;
 static char *(*fstrstr)(const char *, const char *) = strstr;
 
 static unsigned int
-textw_clamp(const char *str, unsigned int n, unsigned int maxw, unsigned int maxh)
+textw_clamp(const char *str, unsigned int n)
 {
-	unsigned int w;
-	if (startswith(image_prefix, str) &&
-			(w = drw_getimagewidth_clamp(drw, str + strlen(image_prefix), maxw, maxh)))
-		return MIN(w + lrpad, n);
-	w = drw_fontset_getwidth_clamp(drw, str, n) + lrpad;
+	unsigned int w = drw_fontset_getwidth_clamp(drw, str, n) + lrpad;
 	return MIN(w, n);
-}
-
-static unsigned int
-texth_clamp(const char *str, unsigned int n, unsigned int maxw, unsigned int maxh)
-{
-	unsigned int h;
-	if (startswith(image_prefix, str) &&
-			(h = drw_getimageheight_clamp(drw, str + strlen(image_prefix), maxw, maxh)))
-		return MIN(h + tbpad, n);
-	return MIN(bh, n);
 }
 
 static void
@@ -102,21 +89,46 @@ calcoffsets(void)
 {
 	int i, n;
 
-	if (lines > 0)
+	if (lines > 0){
 		n = mh - bh;
-	else
+	} else{
 		n = mw - (promptw + inputw + TEXTW("<") + TEXTW(">"));
+	}
+
 	/* calculate which items will begin the next page and previous page */
-	for (i = 0, next = curr; next; next = next->right)
-		if ((i += (lines > 0)
-					? texth_clamp(next->text, n, mw - lrpad, image_size)
-					: textw_clamp(next->text, n, image_size, bh)) > n)
+	for (i = 0, next = curr; next; next = next->right){
+		if(lines >0){
+			if(next->image_path!=NULL){
+				i+=MIN(MAX((next->imageHeight+tbpad),bh),n);
+			}else{
+				i+=MIN(bh,n);
+			}
+		}else{
+			//TODO BROKEN
+			if(next->image_path!=NULL){
+				i+=MIN(next->imageWidth+lrpad,n);
+			}else{
+				i+=textw_clamp(next->text,n); //image_size, bh
+			}
+		}
+		if(i>n){
 			break;
-	for (i = 0, prev = curr; prev && prev->left; prev = prev->left)
-		if ((i += (lines > 0)
-					? texth_clamp(prev->left->text, n, mw - lrpad, image_size)
-					: textw_clamp(prev->left->text, n, image_size, bh)) > n)
+		}
+	}
+	for (i = 0, prev = curr; prev && prev->left; prev = prev->left){
+		if(lines >0){
+			if(prev->left->image_path!=NULL){
+				i+=MIN(MAX((prev->left->imageHeight+tbpad),bh),n);
+			}else{
+				i+=MIN(bh,n);
+			}
+		}else{
+			i+=textw_clamp(prev->left->text,n); //image_size, bh
+		}
+		if(i>n){
 			break;
+		}
+	}
 }
 
 static int
@@ -124,25 +136,8 @@ max_textw(void)
 {
 	int len = 0;
 	for (struct item *item = items; item && item->text; item++)
-		len = MAX(item->width, len);
+		len = MAX(TEXTW(item->text), len);
 	return len;
-}
-
-static int
-max_texth(void)
-{
-	int height = bh;
-	for (struct item *item = items; item && item->text; item++){
-		if (startswith(image_prefix, item->text)) {
-			height += image_size+tbpad;
-		}else{
-			height += bh;
-		};
-	};
-	if(height ==0){
-		height = bh;
-	}
-	return height;
 }
 
 static void
@@ -179,7 +174,6 @@ cistrstr(const char *h, const char *n)
 	return NULL;
 }
 
-
 static int
 drawitem(struct item *item, int x, int y, int w)
 {
@@ -190,18 +184,33 @@ drawitem(struct item *item, int x, int y, int w)
 	else
 		drw_setscheme(drw, scheme[SchemeNorm]);
 
+
 	int vertical = lines > 0;
-	if (startswith(image_prefix, item->text)) {
-		char *path = item->text + strlen(image_prefix);
-		unsigned int image_width = vertical ? w - lrpad : image_size;
-		unsigned int image_height = vertical ? image_size : bh;
-		drw_image(drw, &x, &y, &image_width, &image_height,
-		          lrpad, vertical ? tbpad : 0, path, vertical);
-		if (image_width && image_height)
-			return vertical ? y : x;
+
+	int oldY = y;
+	int retY = y;
+	int tmpX = x;
+	int nextx;
+	if(item->image_path!=NULL){
+		unsigned int maxa=100;
+		unsigned int maxb=100;
+		drw_image(drw, &x, &y, &maxa, &maxb, lrpad, tbpad , item->image_path, 1);
+		tmpX += (item->imageWidth+lrpad);
+		retY+=MAX(item->imageHeight+tbpad,bh);
+		if((item->imageHeight+tbpad)>bh){
+			oldY+=((item->imageHeight+tbpad)-bh)/2;
+		}
+		nextx = drw_text(drw, tmpX, oldY, w, bh, lrpad / 2, item->text, 0);
+	}else{
+		retY+=bh;
+		nextx = drw_text(drw, tmpX, oldY, w, bh, lrpad / 2, item->text, 0);
 	}
-	int nextx = drw_text(drw, x, y, w, bh, lrpad / 2, item->text, 0);
-	return vertical ? y + bh : nextx;
+
+	if(vertical){
+		return retY;
+	}else{
+		return nextx;
+	}
 }
 
 static void
@@ -231,7 +240,7 @@ drawmenu(void)
 
 	if (lines > 0) {
 		/* draw vertical list */
-		y = bh;
+		y=bh;
 		for (item = curr; item != next; item = item->right)
 			y = drawitem(item, x, y, mw - x);
 	} else if (matches) {
@@ -244,7 +253,7 @@ drawmenu(void)
 		}
 		x += w;
 		for (item = curr; item != next; item = item->right)
-			x = drawitem(item, x, 0, textw_clamp(item->text, mw - x - TEXTW(">"), image_size, bh));
+			x = drawitem(item, x, 0, textw_clamp(item->text, mw - x - TEXTW(">")));
 		if (next) {
 			w = TEXTW(">");
 			drw_setscheme(drw, scheme[SchemeNorm]);
@@ -833,11 +842,38 @@ readstdin(void)
 		}
 		if (line[len - 1] == '\n')
 			line[len - 1] = '\0';
-		if (!(items[i].text = strdup(line)))
-			die("strdup:");
-		items[i].width = TEXTW(line);
 
 		items[i].out = 0;
+		items[i].image_path=NULL;
+		if(startswith(image_prefix,line)){
+			char* p, *img;
+			p = line + strlen(image_prefix);
+			if ((img = strsep(&p, ":")) && p) {
+				items[i].imageWidth=drw_getimagewidth_clamp(drw,img,100,100);
+				items[i].imageHeight=drw_getimageheight_clamp(drw,img,100,100);
+				if((items[i].imageWidth==0) && (items[i].imageHeight == 0)){
+					if (!(items[i].text = strdup(line))){
+						die("strdup:");
+					}
+				}else{
+					if (!(items[i].image_path = strdup(img))){
+						die("strdup:");
+					}
+					if (!(items[i].text = strdup(p))){
+						die("strdup:");
+					}
+				}
+			}else{
+				/* Malformed entry, treat whole line as text */
+				if (!(items[i].text = strdup(line))){
+					die("strdup:");
+				}
+			}
+		}else{
+			if (!(items[i].text = strdup(line))){
+				die("strdup:");
+			}
+		}
 	}
 	free(line);
 	if (items)
@@ -913,12 +949,19 @@ setup(void)
 	lines = MAX(lines, 0);
 
 
+	mh = bh;
+	if(lines >0){
+		for (struct item *item = items; item && item->text; item++){
+			if(item->image_path != NULL){
+				mh+=MAX((item->imageHeight+tbpad),bh);
+			}else{
+				mh+=bh;
+			}
+		};
+	}
 
-	/* default values for image_size */
-	if (image_size < 0)
-		image_size = (lines > 0) ? bh : 8 * bh;
 
-	mh = max_texth();
+
 
 	promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;
 #ifdef XINERAMA
@@ -1017,7 +1060,7 @@ usage(void)
 {
 	die("usage: dmenu [-bFfinv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
 	    "             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]\n"
-	    "             [-ip image_prefix] [-is image_size] [-n instant]");
+	    "             [-n instant]");
 }
 
 int
@@ -1065,10 +1108,6 @@ main(int argc, char *argv[])
 			colors[SchemeSel][ColFg] = argv[++i];
 		else if (!strcmp(argv[i], "-w"))   /* embedding window id */
 			embed = argv[++i];
-		else if (!strcmp(argv[i], "-ip"))  /* image prefix */
-			image_prefix = argv[++i];
-		else if (!strcmp(argv[i], "-is"))  /* max. image preview size (height or width) */
-			image_size = atoi(argv[++i]);
 		else
 			usage();
 

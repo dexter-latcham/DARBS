@@ -43,6 +43,7 @@ config.common.default = ["gtk"];
   "qtwebengine-5.15.19"
   ];
     environment.systemPackages = with pkgs; [
+  papirus-icon-theme
       xwallpaper
       pywal
       libxinerama

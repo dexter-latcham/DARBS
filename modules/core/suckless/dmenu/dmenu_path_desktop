@@ -16,3 +16,5 @@ if [ ! -s "$cache" ]; then
 else
 	cat "$cache"
 fi
+
+#/run/current-system/sw/share/icons/Papirus
