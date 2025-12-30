@@ -8,14 +8,7 @@ programs.zsh = {
     completionInit = "autoload -U compinit && compinit";
     plugins = [{ name = "zsh-autocomplete"; src = pkgs.zsh-autocomplete; }];
     shellAliases = {
-      ls = "ls --color=auto -F";
-      ll = "ls -alhF";
-      la = "ls -AF";
-      l = "ls -CF";
-      glog = "git log --oneline --graph --decorate --all";
-      # nix-update-system = "sudo nixos-rebuild switch --flake ~/Utveckling/NixOS#nixos"; # Your Flake path
-      cc = "clang";
-      cxx = "clang++";
+      ns = "sudo nixos-rebuild switch --flake /etc/nixos";
     };
     history = {
       size = 10000;
