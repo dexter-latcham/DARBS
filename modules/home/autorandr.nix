@@ -14,6 +14,6 @@
     };
   };
   xsession.initExtra = ''
-    autorandr --change
+    autorandr --change --force
   '';
 }
