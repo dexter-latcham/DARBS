@@ -11,5 +11,6 @@
 ./zaread.nix
 ./zathura.nix
 ./zsh.nix
+  ./kde-connect.nix
   ];
 }

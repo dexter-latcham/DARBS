@@ -52,4 +52,9 @@ in
       efi.canTouchEfiVariables = true;
     };
   };
+
+  services.udev.extraRules = ''
+    #dont disable microphone
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="0ab7", TEST=="power/control", ATTR{power/control}="on"
+  '';
 }
