@@ -32,7 +32,7 @@ let
 
 // Define blocks for the status feed as X(icon, cmd, interval, signal).
 #define BLOCKS(X)             \
-    X("", "${batScript}/bin/sb-bat", 5, 3)
+    X("", "${batScript}/bin/sb-bat", 5, 9)
 
 #endif  // CONFIG_H
     '';

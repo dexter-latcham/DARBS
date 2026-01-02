@@ -11,9 +11,10 @@ notify() {
 
 
 BUTTON="${BLOCK_BUTTON:-0}"
+BUTTON=1
 
 case "$BUTTON" in
-    3) notify "$(acpi -b | awk -F ': |, ' '{printf "%s\n%s\n", $2, $4}')" ;;
+    1) notify "$(acpi -b | awk -F ': |, ' '{printf "%s\n%s\n", $2, $4}')" ;;
 esac
 
 color=14
