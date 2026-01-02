@@ -1,4 +1,7 @@
 # Custom DWM build
+## Patches applied
+- autostart
+
 ## Patches to be applied
 - status2d
 - centered
