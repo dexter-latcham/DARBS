@@ -9,6 +9,7 @@
 - steam
 - hide vacant tags
 - swallow
+- restartsig
 
 ## Patches to be applied
 - scratchpad
