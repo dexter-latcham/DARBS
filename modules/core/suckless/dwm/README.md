@@ -1,7 +1,6 @@
 # Custom DWM build
 ## Patches applied
 - autostart
-- single tagset
 
 ## Patches to be applied
 - status2d
@@ -11,6 +10,7 @@
 - fullscreen
 - xresources
 - systray
+- single tagset
 - vanity gaps
 - swallow
 - steam
