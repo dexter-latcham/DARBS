@@ -10,9 +10,9 @@
 - hide vacant tags
 - swallow
 - scratchpad
+- fullscreen
 
 ## Patches to be applied
-- fullscreen
 - single tagset
 - vanity gaps
 - hot reload
