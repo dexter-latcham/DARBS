@@ -1,4 +1,5 @@
 #define TERMINAL "st"
+#define TERMINAL "st"
 #define TERMCLASS "St"
 
 /* appearance */
@@ -35,6 +36,24 @@ static const char *const autostart[] = {
 	NULL /* terminate */
 };
 
+typedef struct {
+	const char *name;
+	const void *cmd;
+} Sp;
+
+const char *spcmd1[] = {TERMINAL, "-n", "spterm", "-g", "120x34", NULL };
+const char *spcmd2[] = {TERMINAL, "-n", "spnmtui", "-g", "120x34", "-e", "nmtui", "connect", NULL };
+const char *spcmd3[] = {TERMINAL, "-n", "spbt", "-g", "120x34", "-e", "bluetui", NULL };
+
+const char *spcmd4[] = {"keepassxc", NULL };
+static Sp scratchpads[] = {
+	/* name          cmd  */
+	{"spterm",      spcmd1},
+	{"spnmtui",    spcmd2},
+	{"spbt",    spcmd3},
+	{"keepassxc",   spcmd4},
+};
+
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
@@ -43,11 +62,15 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",    NULL,     NULL,           0,         1,          0,           0,        -1 },
-	{ "Firefox", NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
-	{ "St",      NULL,     NULL,           0,         0,          1,           0,        -1 },
-	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
+	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
+	{ "Gimp",    NULL,       NULL,           0,         1,          0,           0,        -1 },
+	{ TERMCLASS, NULL,       NULL,           0,         0,          1,           0,        -1 },
+	{ NULL,      NULL,     	 "Event Tester",0,          0,          0,           1,        -1 }, /* xev */
+	{ NULL,		  "spterm",	   NULL,					SPTAG(0),		1,			    1,           0,        -1 },
+	{ NULL,		  "spnmtui",	 NULL,					SPTAG(1),		1,			    1,           0,        -1 },
+	{ NULL,		  "spbt",	     NULL,					SPTAG(2),		1,			    1,           0,        -1 },
+	{ NULL,		  "keepassxc", NULL,					SPTAG(3),		0,			    0,           0,        -1 },
+	{ "Firefox", NULL,       NULL,           1 << 8,    0,          0,          -1,        -1 },
 };
 
 /* layout(s) */
@@ -77,7 +100,7 @@ static const Layout layouts[] = {
 #define STATUSBAR "dwmblocks"
 
 /* commands */
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { TERMINAL, NULL };
 
 
 /*
@@ -109,6 +132,9 @@ static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,			          				XK_d,      spawn,          {.v = (const char*[]){ "dmenu_run", NULL } } },
 	{ MODKEY,                       XK_Return, spawn,          SHCMD(TERMINAL)},
+	{ MODKEY|ShiftMask,             XK_Return, togglescratch,  {.ui=0}},
+	{ MODKEY|ShiftMask,             XK_i, 		 togglescratch,  {.ui=1}},
+	{ MODKEY|ShiftMask,             XK_b, 		 togglescratch,  {.ui=2}},
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 
 

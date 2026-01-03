@@ -9,9 +9,10 @@
 - steam
 - hide vacant tags
 - swallow
+- scratchpad
 
 ## Patches to be applied
-- scratchpad
 - fullscreen
 - single tagset
 - vanity gaps
+- hot reload
