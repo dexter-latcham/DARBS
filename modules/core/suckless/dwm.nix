@@ -54,12 +54,7 @@ in
   	nixpkgs.overlays = [
 			(self: super: {
     		dwm = super.dwm.overrideAttrs (oldAttrs: let
-    		in{
-      		src = builtins.path {
-      			path = ./dwm;
-      		};
-      		buildInputs = oldAttrs.buildInputs ++ [ self.libxcb self.libxinerama self.imlib2];
-      		keybindFile = self.writeText "keybinds.h" ''
+      		keybindFile = super.writeText "keybinds.h" ''
 	static const Key keys[] = {
 		/* modifier                     key        function        argument */
 
@@ -81,7 +76,7 @@ in
 		{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 		{ MODKEY,                       XK_space,  zoom,      		 {0} },
 		{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-		{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
+		//{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
 
 		{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 		{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -119,8 +114,14 @@ in
 		//{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 	};
   	'';
+    		in{
+      		src = builtins.path {
+      			path = ./dwm;
+      		};
+      		buildInputs = oldAttrs.buildInputs ++ [ self.libxcb self.libxinerama self.imlib2];
       		postPatch = ''
       			cp config.my.h config.h
+      			cp ${keybindFile} keybinds.h
       		'';
       	});
     	}
