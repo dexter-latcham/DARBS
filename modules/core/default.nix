@@ -7,6 +7,6 @@
 ./shell.nix
 ./user.nix
 ./virtualisation.nix
-    ./stylix.nix
+./stylix.nix
   ];
 }

@@ -1,31 +1,25 @@
 { config, pkgs, lib,username, ... }:
 let
-	sb-date = pkgs.writeShellApplication {
-	    name = "sb-date";
-	    text = builtins.readFile ./statusbar/sb-date.sh;
-	    runtimeInputs = with pkgs;[
-	        coreutils
-	    ];
-	};
-	sb-bat = pkgs.writeShellApplication {
-	    name = "sb-bat";
-	    text = builtins.readFile ./statusbar/sb-bat.sh;
-	    runtimeInputs = with pkgs;[
-	        coreutils
-	        gawk
-	        acpi
-	        libnotify
-	    ];
-	};
-	sb-net = pkgs.writeShellApplication {
-	    name = "sb-net";
-	    text = builtins.readFile ./statusbar/sb-net.sh;
-	    runtimeInputs = with pkgs;[
-	        coreutils
-	    ];
+	mkStatusbarApp = {name, script, inputs ? [ pkgs.coreutils ] }:
+    pkgs.writeShellApplication {
+      inherit name;
+      text = builtins.readFile script;
+      runtimeInputs = inputs;
+    };
+  sb-date = mkStatusbarApp{ name = "sb-date"; script = ./statusbar/sb-date.sh; };
+	sb-net = mkStatusbarApp{ name = "sb-net"; script = ./statusbar/sb-net.sh; };
+	sb-bat = mkStatusbarApp{
+	  name = "sb-bat";
+	  script = ./statusbar/sb-bat.sh;
+	  inputs = [pkgs.coreutils pkgs.gawk pkgs.acpi pkgs.libnotify];
 	};
 
-  dwmblocksAsync = pkgs.dwmblocks.overrideAttrs(old: let
+  blocks = [
+    { path = sb-net; interval = 0; signal = 2;}
+    { path = sb-bat; interval = 600; signal = 1;}
+    { path = sb-date; interval = 60; signal = 0;}
+  ];
+
     configFile = pkgs.writeText "config.def.h" ''
 #ifndef CONFIG_H
 #define CONFIG_H
@@ -46,13 +40,11 @@ let
 #define TRAILING_DELIMITER 0
 
 // Define blocks for the status feed as X(icon, cmd, interval, signal).
-#define BLOCKS(X)             \
-    X("", "${sb-net}/bin/sb-net", 0, 2) \
-    X("", "${sb-bat}/bin/sb-bat", 600, 1) \
-    X("", "${sb-date}/bin/sb-date", 60, 0) 
-#endif  // CONFIG_H
+#define BLOCKS(X)\
+${lib.concatStringsSep "\\\n  " (map (b: ''X("", "${b.path}/bin/${b.path.name}", ${toString b.interval}, ${toString b.signal})'') blocks)}
+#endif
     '';
-    in {
+  dwmblocksAsync = pkgs.dwmblocks.overrideAttrs(old: {
     src = pkgs.fetchFromGitHub {
       owner = "UtkarshVerma";
       repo = "dwmblocks-async";
@@ -65,10 +57,15 @@ let
       pkgs.xorg.xcbutil
     ];
 
-    postPatch = ''
-      cp ${configFile} config.h
-    '';
+    postPatch = '' cp ${configFile} config.h '';
   });
+  signaldwmblocks = pkgs.writeShellScriptBin "signal-dwmblocks" ''
+    if [ -z "$1" ]; then
+      exit 1
+    fi
+    signal=$((34+$1))
+    ${pkgs.procps}/bin/pgrep -u ${username} dwmblocks | xargs -r kill -$signal
+  '';
 in
 {
   environment.systemPackages = with pkgs;[
@@ -76,15 +73,17 @@ in
     sb-date
     sb-bat
     sb-net
-
-
   ];
+
   networking.networkmanager.dispatcherScripts = [
     {
       source = pkgs.writeText "sb-net-update" '' 
-        ${pkgs.procps}/bin/pgrep -u ${username} dwmblocks | xargs -r kill -36
+        ${signaldwmblocks}/bin/signal-dwmblocks 2
       '';
       type = "basic";
     }
   ];
+  services.udev.extraRules = ''
+    SUBSYSTEM=="power_supply", KERNEL=="BAT1", ATTR{capacity}!="", ACTION=="change", RUN+="${signaldwmblocks}/bin/signal-dwmblocks 1"
+  '';
 }
