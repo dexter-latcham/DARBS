@@ -43,64 +43,94 @@ let
 		'';
 		runtimeInputs = [pkgs.maim pkgs.xdotool pkgs.xclip pkgs.tesseract];
 	};
+  defaultMod = "MODKEY";
+  modShift = "MODKEY|ShiftMask";
+
+	mkKey = { key, fun, arg ? "{0}", mod ? defaultMod}: {
+  	inherit mod key fun arg;
+	};
+
+spawnArg = cmd:
+  "{.v = (const char*[]){ \"${cmd}\", NULL }}";
+
+spawnKey = {
+  key,
+  cmd,
+  mod ? defaultMod,
+}: mkKey {
+  inherit key mod;
+  fun = "spawn";
+  arg = spawnArg cmd;
+};
+  argI  = i: "{.i = ${i}}";
+  argF  = f: "{.f = ${f}}";
+  argUI = ui: "{.ui = ${ui}}";
+
+  keyToC = k: "{ ${k.mod}, ${k.key}, ${k.fun}, ${k.arg} },";
+
+	keybindsC = lib.concatStringsSep "\n  " (map keyToC keybinds);
+
+	keybinds = [
+		(mkKey { key = "XK_Return"; fun = "spawn"; arg = "SHCMD(TERMINAL)"; })
+		(mkKey { mod=modShift; key = "XK_Return"; fun = "togglescratch"; arg = argUI "0"; })
+		(mkKey { mod=modShift; key = "XK_i"; fun = "togglescratch"; arg = argUI "1" ; })
+		(mkKey { mod=modShift; key = "XK_b"; fun = "togglescratch"; arg = argUI "2"; })
+		(spawnKey {key = "XK_d"; cmd = "dmenu_run"; })
+		(spawnKey {key = "XK_b"; cmd = "${config.defaultBrowser}/bin/${config.defaultBrowser.name}"; })
+		(spawnKey {mod = modShift; key = "XK_s"; cmd = "${screenshotScript}/bin/screenshot"; })
+		(spawnKey {key = "XK_BackSpace"; cmd = "${pwrMgrScript}/bin/pwrMgr"; })
+		(spawnKey {mod = modShift; key = "XK_q"; cmd = "${pwrMgrScript}/bin/pwrMgr"; })
+		(mkKey { key = "XK_f"; fun = "togglefullscr"; })
+		(mkKey { key = "XK_q"; fun = "killclient"; })
+		(mkKey { key = "XK_t"; fun = "setlayout"; arg="{.v = &layouts[0]}"; })
+		(mkKey { key = "XK_space"; fun = "zoom"; })
+		(mkKey { mod = modShift; key = "XK_space"; fun = "togglefloating"; })
+		(mkKey { mod = modShift; key = "XK_x"; fun = "togglebar"; })
+		(mkKey { key = "XK_j"; fun = "focusstack"; arg = argI "+1"; })
+		(mkKey { key = "XK_k"; fun = "focusstack"; arg = argI "-1"; })
+		(mkKey { key = "XK_o"; fun = "incnmaster"; arg = argI "+1"; })
+		(mkKey { mod = modShift; key = "XK_o"; fun = "incnmaster"; arg = argI "-1"; })
+
+		(mkKey { key = "XK_h"; fun = "setmfact"; arg = argF "-0.05"; })
+		(mkKey { key = "XK_l"; fun = "setmfact"; arg = argF "+0.05"; })
+
+		(mkKey { key = "XK_Tab"; fun = "view"; })
+		(mkKey { key = "XK_0"; fun = "view"; arg = argUI "~0"; })
+		(mkKey { mod = modShift; key = "XK_0"; fun = "tag"; arg = argUI "~0"; })
+
+
+		(mkKey { key = "XK_Left"; fun = "focusmon"; arg = argI "-1"; })
+		(mkKey { key = "XK_Right"; fun = "focusmon"; arg = argI "+1"; })
+
+		(mkKey { mod=modShift; key = "XK_Left"; fun = "tagmon"; arg = argI "-1"; })
+		(mkKey { mod=modShift; key = "XK_Right"; fun = "tagmon"; arg = argI "+1"; })
+
+		(mkKey { key = "XK_z"; fun = "incrgaps"; arg = argI "+1"; })
+		(mkKey { key = "XK_x"; fun = "incrgaps"; arg = argI "-1"; })
+
+		(mkKey { key = "XK_a"; fun = "togglegaps"; })
+		(mkKey { mod=modShift; key = "XK_a"; fun = "defaultgaps"; })
+	];
+
+# helper: count how many times 'x' appears in a list
+count = list: x: builtins.length (builtins.filter (y: y == x) list);
+
+# mod+key strings
+modKeyStrings = map (k: "${k.mod}+${k.key}") keybinds;
+
+# duplicates: strings appearing more than once
+duplicates = lib.filter (x: count modKeyStrings x > 1) modKeyStrings;
 in
-{
-  options.defaultBrowser= lib.mkOption {
-  	type = lib.types.package;
-  	default = pkgs.librewolf;
-  };
-  config = {
+if duplicates != [] then
+  throw "Duplicate keybinds detected for: ${lib.concatStringsSep ", " duplicates}"
+else
+	let
 
-  	nixpkgs.overlays = [
-			(self: super: {
-    		dwm = super.dwm.overrideAttrs (oldAttrs: let
-      		keybindFile = super.writeText "keybinds.h" ''
-	static const Key keys[] = {
-		/* modifier                     key        function        argument */
 
-		{ MODKEY,                       XK_Return, spawn,          SHCMD(TERMINAL)},
-		{ MODKEY|ShiftMask,             XK_Return, togglescratch,  {.ui=0}},
-		{ MODKEY|ShiftMask,             XK_i, 		 togglescratch,  {.ui=1}},
-		{ MODKEY|ShiftMask,             XK_b, 		 togglescratch,  {.ui=2}},
-
-		{ MODKEY,			          				XK_d,      spawn,          {.v = (const char*[]){ "dmenu_run", NULL } } },
-  	{ MODKEY,                       XK_b,      spawn,          {.v = (const char*[]){ "${config.defaultBrowser}/bin/${config.defaultBrowser.name}", NULL } } },
-		{ MODKEY|ShiftMask,		  				XK_s,	     spawn, 		     {.v = (const char*[]){ "${screenshotScript}/bin/screenshot", NULL } } },
-
-		{ MODKEY,			          				XK_BackSpace,  spawn,      {.v = (const char*[]){ "${pwrMgrScript}/bin/pwrMgr", NULL } } },
-		{ MODKEY|ShiftMask,		          XK_q,      spawn,          {.v = (const char*[]){ "${pwrMgrScript}/bin/pwrMgr", NULL } } },
-
-		{ MODKEY,             					XK_f,      togglefullscr,  {0} },
-		{ MODKEY,                       XK_q,      killclient,     {0} },
-
-		{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-		{ MODKEY,                       XK_space,  zoom,      		 {0} },
-		{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-		//{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
-
-		{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-		{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-
-		{ MODKEY,                       XK_o,      incnmaster,     {.i = +1 } },
-		{ MODKEY|ShiftMask,             XK_o,      incnmaster,     {.i = -1 } },
-
-		{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-		{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-
-		{ MODKEY,                       XK_Tab,    view,           {0} },
-		{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-		{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
-
-		{ MODKEY,                       XK_Left,  focusmon,       {.i = -1 } },
-		{ MODKEY,                       XK_Right, focusmon,       {.i = +1 } },
-		{ MODKEY|ShiftMask,             XK_Left,  tagmon,         {.i = -1 } },
-		{ MODKEY|ShiftMask,             XK_Right, tagmon,         {.i = +1 } },
-
-		{ MODKEY,                       XK_z,  	  incrgaps,       {.i = +1 } },
-		{ MODKEY,                       XK_x,  	  incrgaps,       {.i = -1 } },
-		{ MODKEY,                       XK_a,  	  togglegaps,     {0}},
-		{ MODKEY|ShiftMask,             XK_a,  	  defaultgaps,    {0}},
-
+  keybindsH = ''
+    static const Key keys[] = {
+      /* modifier                     key        function        argument */
+      ${keybindsC}
 		TAGKEYS(                        XK_1,                      0)
 		TAGKEYS(                        XK_2,                      1)
 		TAGKEYS(                        XK_3,                      2)
@@ -110,10 +140,19 @@ in
 		TAGKEYS(                        XK_7,                      6)
 		TAGKEYS(                        XK_8,                      7)
 		TAGKEYS(                        XK_9,                      8)
-
-		//{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	};
-  	'';
+    };
+  '';
+	keybindFile = pkgs.writeText "keybinds.h" keybindsH;
+in
+{
+  options.defaultBrowser= lib.mkOption {
+  	type = lib.types.package;
+  	default = pkgs.librewolf;
+  };
+  config = {
+  	nixpkgs.overlays = [
+			(self: super: {
+    		dwm = super.dwm.overrideAttrs (oldAttrs: let
     		in{
       		src = builtins.path {
       			path = ./dwm;
