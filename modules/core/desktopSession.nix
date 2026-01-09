@@ -1,17 +1,4 @@
 {pkgs, username, ... }:
-let
-  tree-sitter-v010 = pkgs.fetchFromGitHub {
-    owner = "tree-sitter";
-    repo = "tree-sitter";
-    rev = "v0.10.0";
-    sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-  };
-
-  # Override pkgs.tree-sitter globally
-  myPkgs = pkgs // {
-    tree-sitter = tree-sitter-v010;
-  };
-in
 {
   imports = [./suckless];
   programs = {
@@ -118,7 +105,6 @@ in
     pkgs.pulseaudio
     pkgs.pavucontrol
     pkgs.libnotify
-    myPkgs.lunarvim
     pkgs.google-chrome
     pkgs.feh
     pkgs.dunst
