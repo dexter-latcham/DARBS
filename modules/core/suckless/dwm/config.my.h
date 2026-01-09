@@ -145,7 +145,6 @@ static const Rule rules[] = {
 	{ NULL,		  "spnmtui",	 NULL,					SPTAG(1),		1,			    1,           0,        -1 },
 	{ NULL,		  "spbt",	     NULL,					SPTAG(2),		1,			    1,           0,        -1 },
 	{ NULL,		  "keepassxc", NULL,					SPTAG(3),		0,			    0,           0,        -1 },
-	{ "Firefox", NULL,       NULL,           1 << 8,    0,          0,          -1,        -1 },
 };
 
 /* layout(s) */

@@ -420,6 +420,21 @@ autostart_exec() {
 
 
 
+static Monitor *
+monbytag(unsigned int tag)
+{
+	Monitor *m, *visible = NULL;
+	Client *c;
+
+	for (m = mons; m; m = m->next) {
+		if (m->tagset[m->seltags] & tag)
+			visible = m;
+		for (c = m->clients; c; c = c->next)
+			if (c->tags & tag)
+				return m;
+	}
+	return visible;
+}
 /* function implementations */
 void
 applyrules(Client *c)
@@ -577,7 +592,7 @@ swallow(Client *p, Client *c)
 
 	if (c->noswallow || c->isterminal)
 		return;
-	if (c->noswallow && !swallowfloating && c->isfloating)
+	if (!swallowfloating && c->isfloating)
 		return;
 
 	detach(c);
@@ -937,11 +952,28 @@ configurerequest(XEvent *e)
 Monitor *
 createmon(void)
 {
-	Monitor *m;
+	Monitor *m, *tm;
 	unsigned int i;
 
+	for (i=1, tm=mons; tm; i++, tm=tm->next);
+	if (i > LENGTH(tags)) {
+		fprintf(stderr, "dwm: failed to add monitor, number of tags exceeded\n");
+		return NULL;
+	}
+
+	/* find the first tag that isn't in use */
+	for (i=0; i < LENGTH(tags); i++) {
+		for (tm=mons; tm && !(tm->tagset[tm->seltags] & (1<<i)); tm=tm->next);
+		if (!tm)
+			break;
+	}
+	if (i >= LENGTH(tags)){
+		fprintf(stderr, "dwm: failed to add monitor, no free tags\n");
+		return NULL;
+	}
 	m = ecalloc(1, sizeof(Monitor));
-	m->tagset[0] = m->tagset[1] = 1;
+	m->tagset[0] = m->tagset[1] = (1<<i)  & TAGMASK;
+
 	m->mfact = mfact;
 	m->nmaster = nmaster;
 	m->showbar = showbar;
@@ -955,7 +987,7 @@ createmon(void)
 	m->tagmap = ecalloc(LENGTH(tags), sizeof(Pixmap));
 	strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
 	m->pertag = ecalloc(1, sizeof(Pertag));
-	m->pertag->curtag = m->pertag->prevtag = 1;
+	m->pertag->curtag = m->pertag->prevtag = (1<<i)  & TAGMASK;
 
 	for (i = 0; i <= LENGTH(tags); i++) {
 		m->pertag->nmasters[i] = m->nmaster;
@@ -2512,11 +2544,33 @@ spawn(const Arg *arg)
 void
 tag(const Arg *arg)
 {
-	if (selmon->sel && arg->ui & TAGMASK) {
-		selmon->sel->tags = arg->ui & TAGMASK;
-		focus(NULL);
-		arrange(selmon);
+	Monitor *m;
+	//no client to move / nowhere to move to
+	if(!selmon->sel || !(arg->ui & TAGMASK)){
+		return;
 	}
+
+	//client is already there
+	if(selmon->sel == arg->ui & TAGMASK){
+		return;
+	}
+	m = monbytag(arg->ui & TAGMASK);
+
+	//send client to monitor with tag
+	if(m && m != selmon){
+		Client *c = selmon->sel;
+		sendmon(c,m);
+		c->tags = arg->ui & TAGMASK;
+		if((arg->ui & TAGMASK) != m->tagset[m->seltags]){
+			arrange(m);
+		}
+		focus(NULL);
+		return;
+	}
+
+	selmon->sel->tags = arg->ui & TAGMASK;
+	focus(NULL);
+	arrange(selmon);
 }
 
 void
@@ -3134,18 +3188,32 @@ updatewmhints(Client *c)
 	}
 }
 
+
 void
 view(const Arg *arg)
 {
+	unsigned int tag;
 	int i;
-	unsigned int tmptag;
+	Monitor *m;
 
-	if ((arg->ui & TAGMASK) == selmon->tagset[selmon->seltags])
+	tag = arg->ui & TAGMASK;
+	tag = arg->ui & TAGMASK;
+
+	//view {0}, alt tab behaviour
+	if(tag && (m = monbytag(tag)) && m!= selmon){
+		focusmon(&(Arg){.i = (m == selmon->next) ? +1 : -1 });
+		view(&(Arg){.ui = tag });
 		return;
+	}
+
+	if (tag == selmon->tagset[selmon->seltags])
+		return;
+
 	takepreview();
 	selmon->seltags ^= 1; /* toggle sel tagset */
-	if (arg->ui & TAGMASK){
-		selmon->tagset[selmon->seltags] = arg->ui & TAGMASK;
+
+	if (tag){
+		selmon->tagset[selmon->seltags] = tag;
 		selmon->pertag->prevtag = selmon->pertag->curtag;
 
 		if (arg->ui == ~0)
@@ -3155,7 +3223,7 @@ view(const Arg *arg)
 			selmon->pertag->curtag = i + 1;
 		}
 	} else {
-		tmptag = selmon->pertag->prevtag;
+		unsigned int tmptag = selmon->pertag->prevtag;
 		selmon->pertag->prevtag = selmon->pertag->curtag;
 		selmon->pertag->curtag = tmptag;
 	}
@@ -3279,8 +3347,9 @@ termforwin(const Client *w)
 
 	for (m = mons; m; m = m->next) {
 		for (c = m->clients; c; c = c->next) {
-			if (c->isterminal && !c->swallowing && c->pid && isdescprocess(c->pid, w->pid))
+			if (c->isterminal && !c->swallowing && c->pid && isdescprocess(c->pid, w->pid)){
 				return c;
+			}
 		}
 	}
 
@@ -3436,6 +3505,7 @@ resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst)
 			*idst = strtoul(ret.addr, NULL, 10);
 			break;
 		case FLOAT:
+			*fdst = strtof(ret.addr, NULL);
 			*fdst = strtof(ret.addr, NULL);
 			break;
 		}
