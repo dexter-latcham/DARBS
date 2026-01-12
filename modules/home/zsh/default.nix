@@ -69,21 +69,21 @@
       bindkey '^e' edit-command-line
       bindkey -M vicmd '^e' edit-command-line
 
-      # last command output in vim buffer
-      functin last-output() {
-        local f
-          f=$(mktemp)
-          fc -ln -1 | sed '1d' > "$f"
-          nvim "$f"
-      }
-      zle -N last-output
-
-      bindkey '^o' last-output
-      bindkey -M vicmd '^o' last-output
+      # # last command output in vim buffer
+      # functin last-output() {
+      #   local f
+      #   f=$(mktemp)
+      #   fc -ln -1 | sed '1d' > "$f"
+      #   nvim "$f"
+      # }
+      # zle -N last-output
+      #
+      # bindkey '^o' last-output
+      # bindkey -M vicmd '^o' last-output
 
       # help for command
       function man-or-help() {
-        local cmd = ''${BUFFER%% *}
+        local cmd=''${BUFFER%% *}
         man "$cmd" 2>/dev/null || "$cmd" --help | less
       }
       zle -N man-or-help
