@@ -10,7 +10,8 @@
 ./xsession.nix
 ./zaread.nix
 ./zathura.nix
-./zsh.nix
+./zsh
   ./kde-connect.nix
+  ./astrovim.nix
   ];
 }
