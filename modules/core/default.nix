@@ -2,6 +2,7 @@
 {
   imports = [
 ./system.nix
+./audio.nix
 ./networking.nix
 ./desktopSession.nix
 ./shell.nix

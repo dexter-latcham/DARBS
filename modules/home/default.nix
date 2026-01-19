@@ -11,6 +11,7 @@
 ./zaread.nix
 ./zathura.nix
 ./zsh
+  ./audio.nix
   ./kde-connect.nix
   ./astrovim.nix
   ];
