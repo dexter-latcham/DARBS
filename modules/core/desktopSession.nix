@@ -87,7 +87,6 @@
     pkgs.git
     pkgs.gnumake
     pkgs.gcc
-    pkgs.spotify
     pkgs.freetype
     pkgs.libx11
     pkgs.libxft

@@ -9,5 +9,6 @@
 ./user.nix
 ./virtualisation.nix
 ./stylix.nix
+  ./spotify.nix
   ];
 }
