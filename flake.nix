@@ -16,13 +16,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, disko, nixpkgs, stylix, ...}@inputs:
+  outputs = { self, disko, nixpkgs,dwm, stylix, ...}@inputs:
   let
       username = "dex";
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
+        config.cudaSupport = true;
       };
   in
   {
@@ -30,6 +31,7 @@
       nixtop = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
+          dwm.nixosModules.default
           stylix.nixosModules.stylix
             ./hosts/laptop
           ];

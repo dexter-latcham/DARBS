@@ -21,6 +21,8 @@ in
   hardware.graphics = {
     enable=true;
     enable32Bit = true;
+    drisupport = true;
+    drisupport32Bit = true;
     extraPackages = with pkgs; [
       intel-media-driver
       intel-vaapi-driver
@@ -47,12 +49,6 @@ in
   # xbox controller support
   hardware.xpadneo.enable=true;
 
-  hardware.pulseaudio = {
-    enable = true;
-    daemon.config = {
-      min-req = "1024/48000";
-    };
-  };
   hardware.nvidia = {
     modesetting.enable=true;
     open = false;
@@ -84,4 +80,16 @@ in
     #dont disable microphone
     ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="0ab7", TEST=="power/control", ATTR{power/control}="on"
   '';
+
+  fileSystems."/mnt/nasData" = {
+    device = "192.168.8.167:/mnt/MainPool/pc-share";
+    fsType = "nfs";
+
+    options = [
+      "x-systemd.automount"   # mount on first access
+      "noatime"
+      "nofail"                # don't fail boot if NAS is offline
+      "_netdev"               # wait for network
+    ];
+  };
 }

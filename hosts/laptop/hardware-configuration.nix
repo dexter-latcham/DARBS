@@ -14,15 +14,8 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/data" =
-    { device = "/dev/disk/by-uuid/6665-67C0";
-      fsType = "vfat";
-        options = [
-          "rw"
-          "uid=1000"
-          "gid=100"
-          "umask=0022"
-          "nofail"
-        ];
+    { device = "/dev/disk/by-uuid/5a0c42e7-ca88-4d2f-a0cb-b99beacd1988";
+      fsType = "ext4";
     };
 
   fileSystems."/" =

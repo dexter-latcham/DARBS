@@ -54,6 +54,9 @@
   ];
 
   environment.systemPackages = [
+    pkgs.nodejs
+    pkgs.lmstudio
+    pkgs.notion
     pkgs.xwallpaper
     pkgs.pywal
     pkgs.libxinerama
