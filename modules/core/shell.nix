@@ -13,6 +13,7 @@
     ];
 
     systemPackages = with pkgs; [
+      direnv
       pstree
       htop
       fastfetch
