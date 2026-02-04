@@ -46,7 +46,11 @@ screenshotScript = pkgs.writeShellApplication{
 in
 {
   programs.dwm.enable = true;
+  environment.systemPackages = with pkgs;[
+  	screenshotScript
+  ];
   programs.dwm.appKeybinds = [
+  
   {mod="MODKEY|ShiftMask"; key = "s"; app = "${screenshotScript}/bin/screnshot";}
   {key = "BackSpace"; app = "${pwrMgrScript}/bin/pwrMgr";}
   {mod="MODKEY|ShiftMask"; key = "q"; app = "${pwrMgrScript}/bin/pwrMgr";}
