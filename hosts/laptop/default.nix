@@ -9,6 +9,7 @@ with pkgs; let
 in
 {
   imports = [./hardware-configuration.nix
+    ./disko-config.nix
     ./../../modules/core
   ];
 

@@ -3,19 +3,11 @@
     enable = true;
     hideMounts = true;
     directories = [
-      "/var/log"
-      "/var/lib"
       "/var/lib/systemd"
-
-      "/etc/NetworkManager"
+      "/var/log"
       "/etc/nixos"
-
-      "/etc/ssh"
-
-
       "/var/lib/bluetooth"
       "/var/lib/nixos"
-      "/var/lib/systemd/coredump"
       "/etc/NetworkManager/system-connections"
     ];
     files = [

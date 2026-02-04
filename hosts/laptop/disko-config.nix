@@ -96,7 +96,7 @@
   };
   fileSystems."/nix".neededForBoot = true; 
   fileSystems."/persist".neededForBoot = true;
-  fileSystems."/mnt/games/".options = [
+  fileSystems."/mnt/games".options = [
     "noatime"
     "uid=1000"
     "gid=100"
