@@ -26,6 +26,7 @@
       "gamemode"
     ];
     shell = pkgs.zsh;
+    initialPassword = "foobar";
   };
   nix.settings.allowed-users = [ "${username}" ];
 
