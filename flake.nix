@@ -16,9 +16,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    impermanence.url = "github:nix-community/impermanence";
+    impermanence = {
+      url = "github:nix-community/impermanence";
+    };
   };
-  outputs = { self, disko, nixpkgs,dwm, stylix, ...}@inputs:
+  outputs = { self, disko, nixpkgs,dwm, stylix, impermanence, ...}@inputs:
   let
       username = "dex";
       system = "x86_64-linux";
@@ -33,6 +35,7 @@
       nixtop = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
+          impermanence.nixosModules.impermanence
           disko.nixosModules.disko
           dwm.nixosModules.default
           stylix.nixosModules.stylix

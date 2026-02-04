@@ -1,5 +1,4 @@
-{config, lib, ...}: {
-
+{inputs, ...}: {
   environment.persistence."/persist" = {
     enable = true;
     hideMounts = true;
