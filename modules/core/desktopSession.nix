@@ -3,17 +3,7 @@
   imports = [./suckless];
   
   programs = {
-    gamemode.enable = true;
     slock.enable = true;
-    steam = {
-      enable = true;
-      remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-      dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-      localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-      extraCompatPackages = with pkgs; [
-        proton-ge-bin # Use Proton GE as an extra compatibility package
-      ];
-    };
     zsh.enable = true;
     cdemu.enable = true;
     gnupg.agent.enable=true;

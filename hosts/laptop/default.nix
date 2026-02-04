@@ -64,14 +64,18 @@ in
   services.xserver.videoDrivers = ["nvidia"];
 
   boot = {
+    loader = {
+      efi.canTouchEfiVariables = true;
+      limine = {
+        enable = true;
+        secureBoot.enable = false;
+        maxGenerations = 10;
+      };
+    };
     extraModulePackages = with config.boot.kernelPackages; [ xpadneo ];
     extraModprobeConfig = ''
       options bluetooth disable_ertm=Y
     '';
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
   };
 
   services.udev.extraRules = ''
@@ -79,15 +83,19 @@ in
     ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="0ab7", TEST=="power/control", ATTR{power/control}="on"
   '';
 
-  fileSystems."/mnt/nasData" = {
-    device = "192.168.8.167:/mnt/MainPool/pc-share";
-    fsType = "nfs";
 
-    options = [
-      "x-systemd.automount"   # mount on first access
-      "noatime"
-      "nofail"                # don't fail boot if NAS is offline
-      "_netdev"               # wait for network
-    ];
-  };
+  services.fwupd.enable = true; # Firmware updater # fwupdmgr --help
+
+  services.getty.autologinUser = "zad";
+  # fileSystems."/mnt/nasData" = {
+  #   device = "192.168.8.167:/mnt/MainPool/pc-share";
+  #   fsType = "nfs";
+  #
+  #   options = [
+  #     "x-systemd.automount"   # mount on first access
+  #     "noatime"
+  #     "nofail"                # don't fail boot if NAS is offline
+  #     "_netdev"               # wait for network
+  #   ];
+  # };
 }

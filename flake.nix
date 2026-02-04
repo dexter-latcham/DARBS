@@ -15,6 +15,8 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    impermanence.url = "github:nix-community/impermanence";
   };
   outputs = { self, disko, nixpkgs,dwm, stylix, ...}@inputs:
   let
@@ -31,6 +33,7 @@
       nixtop = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
+          disko.nixosModules.disko
           dwm.nixosModules.default
           stylix.nixosModules.stylix
             ./hosts/laptop

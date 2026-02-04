@@ -1,6 +1,7 @@
 {...}:
 {
   imports = [
+./impermiance.nix
 ./system.nix
 ./audio.nix
 ./networking.nix
@@ -10,5 +11,6 @@
 ./virtualisation.nix
 ./stylix.nix
   ./spotify.nix
+  ./steam.nix
   ];
 }

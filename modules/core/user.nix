@@ -23,6 +23,7 @@
       "networkmanager"
       "video"
       "input"
+      "gamemode"
     ];
     shell = pkgs.zsh;
   };
