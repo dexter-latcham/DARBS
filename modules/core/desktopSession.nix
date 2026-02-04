@@ -49,21 +49,20 @@
       vSync = true;
     };
   };
-  nixpkgs.config.permittedInsecurePackages = [
-    "qtwebengine-5.15.19"
-  ];
+  #nixpkgs.config.permittedInsecurePackages = [
+  #  "qtwebengine-5.15.19"
+  #];
 
   environment.systemPackages = [
-    pkgs.r2modman
+    #pkgs.r2modman
     pkgs.devenv
-    pkgs.nodejs
-    pkgs.lmstudio
-    pkgs.notion
+    #pkgs.nodejs
+    #pkgs.lmstudio
+    #pkgs.notion
     pkgs.xwallpaper
-    pkgs.pywal
     pkgs.libxinerama
     pkgs.xclip
-    pkgs.stremio
+    #pkgs.stremio
     pkgs.vim
     pkgs.wget
     pkgs.neovim
@@ -91,19 +90,19 @@
     pkgs.libxft
     pkgs.autorandr
     pkgs.dmenu
-    pkgs.vesktop
-    pkgs.discord
-    pkgs.signal-desktop-bin
-    pkgs.qbittorrent
-    pkgs.texliveFull
-    pkgs.sqlitebrowser
-    pkgs.qdiskinfo
-    pkgs.vlc
+    #pkgs.vesktop
+    #pkgs.discord
+    #pkgs.signal-desktop-bin
+    #pkgs.qbittorrent
+    #pkgs.texliveFull
+    #pkgs.sqlitebrowser
+    #pkgs.qdiskinfo
+    #pkgs.vlc
     pkgs.picard
     pkgs.pulseaudio
     pkgs.pavucontrol
     pkgs.libnotify
-    pkgs.google-chrome
+    #pkgs.google-chrome
     pkgs.feh
     pkgs.dunst
     pkgs.unzip
