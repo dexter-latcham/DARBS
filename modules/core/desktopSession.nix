@@ -91,7 +91,7 @@
     pkgs.autorandr
     pkgs.dmenu
     #pkgs.vesktop
-    #pkgs.discord
+    pkgs.discord
     #pkgs.signal-desktop-bin
     #pkgs.qbittorrent
     #pkgs.texliveFull

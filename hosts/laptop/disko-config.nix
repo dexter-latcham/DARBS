@@ -32,6 +32,7 @@
 									type = "luks";
 									name = "cryptroot";
 									settings.allowDiscards = true; # Enables TRIM, reducing wear on SSDs
+									settings.bypassWorkqueues = true; # speed up for ssds
 										content = {
 											type = "btrfs";
 											extraArgs = [ "-L" "nixos" "-f" ];
