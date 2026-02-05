@@ -9,7 +9,7 @@
 		disk = {
 			main = {
 				type = "disk";
-				device = "/dev/nvme1n1"; #512gb
+				device = "/dev/nvme0n1"; #512gb
 					content = {
 						type = "gpt";
 						partitions = {
@@ -74,7 +74,7 @@
 			};
 		games = {
 			type = "disk";
-			device = "/dev/nvme0n1";
+			device = "/dev/nvme1n1";
 				content = {
 					type = "gpt";
 					partitions = {

@@ -1,29 +1,34 @@
 {inputs, lib,...}: {
-  boot.initrd.postResumeCommands = lib.mkAfter ''
-    mkdir -p /btrfs_tmp
-    mount -o subvol=/root /dev/disk/by-label/nixos /btrfs_tmp # CONFIRM THIS IS CORRECT FROM findmnt
-    
-    if [[ -e /btrfs_tmp/root ]]; then
-      mkdir -p /btrfs_tmp/old_roots
-      timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
-      mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp" || true
-    fi
+  boot.initrd.postMountCommands = lib.mkAfter ''
+		set -e # exit on any error # Temporary mount point 
+		mkdir -p /btrfs_tmp # Mount the decrypted root BTRFS subvolume 
+		mount -o subvol=/root /dev/mapper/cryptroot /btrfs_tmp 
 
-    delete_subvolume_recursively() {
-      IFS=$'\n'
-      for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
-        delete_subvolume_recursively "/btrfs_tmp/$i"
-      done
-      btrfs subvolume delete "$1" || true
-    }
+		# Prepare old roots directory 
+		mkdir -p /btrfs_tmp/old_roots 
 
-    if [[ -d /btrfs_tmp/old_roots ]]; then
-      for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
-        delete_subvolume_recursively "$i"
-      done
-    fi
-    btrfs subvolume create /btrfs_tmp/root
-    umount /btrfs_tmp
+		# Move existing root to timestamped old_roots if it exists 
+		if [ -d /btrfs_tmp/root ]; then 
+			timestamp=$(date -u +"%Y-%m-%d_%H-%M-%S") 
+			mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp" || true 
+		fi
+		# Function to recursively delete BTRFS subvolumes 
+		delete_subvolume_recursively() {
+			local subvol_path="$1"
+			# Delete nested subvolumes first 
+			for nested in $(btrfs subvolume list -o "$subvol_path" | awk '{for(i=9;i<=NF;i++) printf $i " "; print ""}'); do 
+				delete_subvolume_recursively "/btrfs_tmp/$nested" 
+			done 
+			btrfs subvolume delete "$subvol_path" || true 
+		} 
+		# Delete old snapshots older than 30 days 
+		find /btrfs_tmp/old_roots/ -mindepth 1 -maxdepth 1 -type d -mtime +30 | while read old; do 
+			delete_subvolume_recursively "$old" 
+		done 
+		# Create a fresh root subvolume 
+		btrfs subvolume create /btrfs_tmp/root 
+		# Unmount temporary mount 
+		umount /btrfs_tmp
   '';
 
 

@@ -67,11 +67,7 @@ in
   boot = {
     loader = {
       efi.canTouchEfiVariables = true;
-      limine = {
-        enable = true;
-        secureBoot.enable = false;
-        maxGenerations = 10;
-      };
+      systemd-boot.enable = true;
     };
     extraModulePackages = with config.boot.kernelPackages; [ xpadneo ];
     extraModprobeConfig = ''
