@@ -83,7 +83,6 @@ in
 
   services.fwupd.enable = true; # Firmware updater # fwupdmgr --help
 
-  services.getty.autologinUser = "dex";
   # fileSystems."/mnt/nasData" = {
   #   device = "192.168.8.167:/mnt/MainPool/pc-share";
   #   fsType = "nfs";

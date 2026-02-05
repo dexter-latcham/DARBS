@@ -1,7 +1,6 @@
 {...}:
 {
   imports = [
-./impermiance.nix
 ./system.nix
 ./audio.nix
 ./networking.nix

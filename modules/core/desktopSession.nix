@@ -20,12 +20,15 @@
     config.common.default = ["gtk"];
   };
   services = {
-    displayManager.ly.enable=true;
+    displayManager.autoLogin = {
+      enable = true;
+      user = "dex";
+    };
     xserver = {
       enable=true;
       autoRepeatDelay=200;
       autoRepeatInterval=35;
-      windowManager.qtile.enable=true;
+
       displayManager.sessionCommands = ''
         xset s off
         xset -dpms
@@ -54,11 +57,11 @@
   #];
 
   environment.systemPackages = [
-    #pkgs.r2modman
+    pkgs.r2modman
     pkgs.devenv
-    #pkgs.nodejs
+    pkgs.nodejs
     #pkgs.lmstudio
-    #pkgs.notion
+    pkgs.notion
     pkgs.xwallpaper
     pkgs.libxinerama
     pkgs.xclip
@@ -90,19 +93,18 @@
     pkgs.libxft
     pkgs.autorandr
     pkgs.dmenu
-    #pkgs.vesktop
+    pkgs.vesktop
     pkgs.discord
-    #pkgs.signal-desktop-bin
-    #pkgs.qbittorrent
-    #pkgs.texliveFull
+    pkgs.qbittorrent
+    pkgs.texliveFull
     #pkgs.sqlitebrowser
     #pkgs.qdiskinfo
-    #pkgs.vlc
+    pkgs.vlc
     pkgs.picard
     pkgs.pulseaudio
     pkgs.pavucontrol
     pkgs.libnotify
-    #pkgs.google-chrome
+    pkgs.google-chrome
     pkgs.feh
     pkgs.dunst
     pkgs.unzip
