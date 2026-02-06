@@ -1,8 +1,8 @@
 {inputs, ...}:{
   programs.fuse.userAllowOther = true;
   users.users.dex.extraGroups = ["fuse"];
-  availableKernelModules = ["btrfs" "dm-mod" "dm-crypt"];
-  kernelModules = ["btrfs" "dm-mod" "dm-crypt"];
+  boot.initrd.availableKernelModules = ["btrfs" "dm-mod" "dm-crypt"];
+  boot.initrd.kernelModules = ["btrfs" "dm-mod" "dm-crypt"];
   boot.initrd.postDeviceCommands = lib.mkAfter ''
     if [ ! -e /dev/mapper/cryptroot ]; then
         echo "❌ LUKS device not found - trying to open..."
@@ -13,7 +13,7 @@
     fi
 
     mkdir -p /tmp/mnt-btrfs-root
-    if ! mount -t btrfs /dev/mapper/cryptroot /tmp/mnt-btrfs-root -o subvol=/root,compress=zstd; then
+    if ! mount -t btrfs /dev/mapper/cryptroot /tmp/mnt-btrfs-root -o subvol=root,compress=zstd; then
         echo "❌ Failed to mount btrfs root (subvolid=5)"
         exit 1
     fi
