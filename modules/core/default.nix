@@ -1,6 +1,7 @@
 {...}:
 {
   imports = [
+  ./impermanence.nix
 ./system.nix
 ./audio.nix
 ./networking.nix

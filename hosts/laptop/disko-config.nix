@@ -96,7 +96,6 @@
 		};
 
 	};
-	fileSystems."/nix".neededForBoot = true; 
 	fileSystems."/persist".neededForBoot = true;
 	fileSystems."/games".neededForBoot = false;
 }
