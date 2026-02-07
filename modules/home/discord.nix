@@ -33,7 +33,7 @@
         fixYoutubeEmbeds.enable = true;
         showHiddenChannels.enable = true;
         showMeYourName.enable = true;
-        vcNarratorCustom = {
+        vcNarrator= {
           enable = true;
           voice = "serena pico";
         };

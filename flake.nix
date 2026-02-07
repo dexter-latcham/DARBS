@@ -19,6 +19,7 @@
     impermanence = {
       url = "github:nix-community/impermanence";
     };
+    nixcord.url = "github:FlameFlag/nixcord";
   };
   outputs = { self, disko, nixpkgs,dwm, stylix, impermanence, ...}@inputs:
   let
