@@ -82,15 +82,16 @@ in
 
   services.fwupd.enable = true; # Firmware updater # fwupdmgr --help
 
-  # fileSystems."/mnt/nasData" = {
-  #   device = "192.168.8.167:/mnt/MainPool/pc-share";
-  #   fsType = "nfs";
-  #
-  #   options = [
-  #     "x-systemd.automount"   # mount on first access
-  #     "noatime"
-  #     "nofail"                # don't fail boot if NAS is offline
-  #     "_netdev"               # wait for network
-  #   ];
-  # };
+  fileSystems."/mnt/nasData" = {
+    device = "192.168.8.167:/mnt/MainPool/pc-share";
+    fsType = "nfs";
+  
+    options = [
+      "x-systemd.automount"   # mount on first access
+      "noauto"
+      "x-systemd.idle-timeout=600" # Optional: disconnects after 10 mins idle
+      "x-systemd.device-timeout=5s" # Time to wait for network before failing
+      "x-systemd.mount-timeout=5s"
+    ];
+  };
 }

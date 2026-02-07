@@ -1,5 +1,10 @@
 {pkgs,config,...}:
 {
+  home.persistence."/persist".directories = [
+    ".local/share/zoxide"
+    ".local/share/zsh"
+  ];
+
   home.packages = with pkgs; [
     oh-my-posh
       zoxide # fuzzy cd

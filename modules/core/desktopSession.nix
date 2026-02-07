@@ -52,9 +52,6 @@
       vSync = true;
     };
   };
-  #nixpkgs.config.permittedInsecurePackages = [
-  #  "qtwebengine-5.15.19"
-  #];
 
   environment.systemPackages = [
     pkgs.r2modman
@@ -65,7 +62,7 @@
     pkgs.xwallpaper
     pkgs.libxinerama
     pkgs.xclip
-    #pkgs.stremio
+    (pkgs.callPackage ./stremio-linux-shell.nix {})
     pkgs.vim
     pkgs.wget
     pkgs.neovim
@@ -76,7 +73,6 @@
     pkgs.xorg.xev
     pkgs.gnumake
     pkgs.xorg.libX11.dev
-    pkgs.github-cli
     pkgs.xorg.libXft
     pkgs.xorg.libXinerama
     pkgs.xorg.libxcb
@@ -85,7 +81,6 @@
     pkgs.xdg-desktop-portal-gtk
     pkgs.alacritty
     pkgs.pulsemixer
-    pkgs.git
     pkgs.gnumake
     pkgs.gcc
     pkgs.freetype

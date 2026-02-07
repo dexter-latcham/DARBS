@@ -13,7 +13,7 @@
     fi
 
     mkdir -p /tmp/mnt-btrfs-root
-    if ! mount -t btrfs /dev/mapper/cryptroot /tmp/mnt-btrfs-root -o subvol=root,compress=zstd; then
+    if ! mount -t btrfs /dev/mapper/cryptroot /tmp/mnt-btrfs-root -o subvolid=5,compress=zstd; then
         echo "❌ Failed to mount btrfs root (subvolid=5)"
         exit 1
     fi
@@ -41,7 +41,6 @@
         delete_subvolume_recursively "root"
     fi
     btrfs subvolume create "root"
-    mkdir -p "root"/{etc,var,tmp,usr}
 
     find . -maxdepth 1 -name "root-old-*" -type d 2>/dev/null | sort -r | tail -n +4 | while IFS= read -r old; do
       btrfs subvolume delete "./$old" 2>/dev/null || true
@@ -78,6 +77,7 @@
         { directory = ".nixops"; mode = "0700"; }
         { directory = ".local/share/keyrings"; mode = "0700"; }
         ".local/share/direnv"
+      	".config/discord"
       ];
       files = [
         ".screenrc"

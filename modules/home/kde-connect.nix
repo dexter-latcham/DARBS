@@ -1,5 +1,8 @@
 {pkgs, config, lib,...}:
 {
+  home.persistence."/persist".directories = [
+    ".config/kdeconnect"
+  ];
   xdg.configFile.kdeglobals = lib.mkIf(config ? lib.stylix){
     source =
       let

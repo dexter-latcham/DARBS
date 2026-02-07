@@ -17,4 +17,8 @@
 
     gamemode.enable = true;
   };
+  environment.persistence."/persist".users.dex.directories = [
+    ".steam"
+    ".local/share/Steam"
+  ];
 }

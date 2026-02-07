@@ -55,6 +55,11 @@ awk -v histfile=$historyfile '
 in
 {
 
+  environment.persistence."/persist".users.dex.files = [
+    ".cache/dmenu_run"
+    ".cache/dmenu_history"
+  ];
+
   environment.systemPackages = with pkgs;[
     run_history
     (dmenu.overrideAttrs (oldAttrs: rec{

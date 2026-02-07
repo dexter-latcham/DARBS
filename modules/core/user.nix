@@ -26,7 +26,9 @@
       "gamemode"
     ];
     shell = pkgs.zsh;
-    initialPassword = "foobar";
+
+   hashedPassword = "$6$2LuiqXfchJhaARg/$VNBv17B/oZ7Wc6sHY/hRLFULq4ASTpcs71NEKSRkeMlmCb11wNNp2VRVNaf0vNOz48IPXNvwffBXrOopt6c/g0";
+
   };
   nix.settings.allowed-users = [ "${username}" ];
 
