@@ -1,7 +1,6 @@
 { pkgs, ... }:
 {
   nix = {
-    channel.enable = false;
     settings = {
       auto-optimise-store = true;
       warn-dirty = false;

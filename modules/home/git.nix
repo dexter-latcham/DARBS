@@ -1,4 +1,8 @@
 { pkgs, ... }:{
+
+	programs.gh = {
+		enable = true;
+	};
 	programs.git = {
 		enable = true;
 		settings = {
@@ -9,9 +13,6 @@
 			init.defaultBranch = "main";
 		};
 	};
-	home.packages = with pkgs; [
-		github-cli
-	];
   home.persistence."/persist".files = [
 		".config/gh/hosts.yml"
 	];
