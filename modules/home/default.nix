@@ -4,7 +4,7 @@
 ./autorandr.nix
 ./chromium.nix
 ./dunst.nix
-./librewolf.nix
+./firefox.nix
 ./xdg-mime.nix
 ./xresources.nix
 ./xsession.nix

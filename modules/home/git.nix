@@ -12,7 +12,7 @@
 	home.packages = with pkgs; [
 		github-cli
 	];
-  home.persistence."/persist".directories = [
+  home.persistence."/persist".files = [
 		".config/gh/hosts.yml"
 	];
 }
