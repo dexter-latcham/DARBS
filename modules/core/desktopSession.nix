@@ -88,8 +88,6 @@
     pkgs.libxft
     pkgs.autorandr
     pkgs.dmenu
-    pkgs.vesktop
-    pkgs.discord
     pkgs.qbittorrent
     pkgs.texliveFull
     #pkgs.sqlitebrowser
