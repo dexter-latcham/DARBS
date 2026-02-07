@@ -14,5 +14,6 @@
   ./audio.nix
   ./kde-connect.nix
   ./astrovim.nix
+	./git.nix
   ];
 }
