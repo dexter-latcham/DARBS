@@ -16,5 +16,6 @@
   ./astrovim.nix
 	./git.nix
   ./discord.nix
+  ./spotify.nix
   ];
 }
