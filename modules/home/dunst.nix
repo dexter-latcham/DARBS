@@ -30,6 +30,8 @@
         markup = "full";
         min_icon_size = 32;
         max_icon_size = 100;
+        stack_duplicates = true;
+        hide_duplicates_count = true;
       };
     };
   };
