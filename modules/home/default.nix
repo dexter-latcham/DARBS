@@ -15,5 +15,6 @@
   ./kde-connect.nix
   ./astrovim.nix
 	./git.nix
+  ./discord.nix
   ];
 }
