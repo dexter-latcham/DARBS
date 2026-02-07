@@ -32,9 +32,12 @@ struct item {
 	char *text;
 	unsigned int width;
 	struct item *left, *right;
-	int out;
+	int out, hp;
 	double distance;
 };
+
+static const char **hpitems = NULL;
+static int hplength = 0;
 
 static char text[BUFSIZ] = "";
 static char *embed;
@@ -59,6 +62,30 @@ static Clr *scheme[SchemeLast];
 
 static int (*fstrncmp)(const char *, const char *, size_t) = strncmp;
 static char *(*fstrstr)(const char *, const char *) = strstr;
+
+static void
+parse_hpitems(char *src)
+{
+	int n = 0;
+	char *t;
+
+	for (t = strtok(src, ","); t; t = strtok(NULL, ",")) {
+		if (hplength + 1 >= n) {
+			if (!(hpitems = realloc(hpitems, (n += 8) * sizeof *hpitems)))
+				die("Unable to realloc %zu bytes\n", n * sizeof *hpitems);
+		}
+		hpitems[hplength++] = t;
+	}
+}
+
+static int
+is_priority_text(const char *text)
+{
+	for (size_t i = 0; i < hplength; i++)
+		if (!strcmp(text, hpitems[i]))
+			return 1;
+	return 0;
+}
 
 static unsigned int
 textw_clamp(const char *str, unsigned int n)
@@ -117,6 +144,7 @@ cleanup(void)
 		free(scheme[i]);
 	for (i = 0; items && items[i].text; ++i)
 		free(items[i].text);
+	free(hpitems);
 	free(items);
 	drw_free(drw);
 	XSync(dpy, False);
@@ -249,6 +277,9 @@ compare_distance(const void *a, const void *b)
 	if (!da)
 		return -1;
 
+	if(da->hp != db->hp){
+		return db->hp - da->hp;
+	}
 	return da->distance == db->distance ? 0 : da->distance < db->distance ? -1 : 1;
 }
 
@@ -785,6 +816,7 @@ readstdin(void)
 		if (!(items[i].text = strdup(line)))
 			die("strdup:");
 		items[i].width = TEXTW(line);
+		items[i].hp = is_priority_text(items[i].text);
 
 		items[i].out = 0;
 	}
@@ -1006,6 +1038,8 @@ main(int argc, char *argv[])
 			colors[SchemeSel][ColFg] = argv[++i];
 		else if (!strcmp(argv[i], "-w"))   /* embedding window id */
 			embed = argv[++i];
+		else if (!strcmp(argv[i], "-hp"))
+			parse_hpitems(argv[++i]);
 		else
 			usage();
 
