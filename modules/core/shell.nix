@@ -12,22 +12,7 @@
       zsh
     ];
 
-    programs.git = {
-	enable = true;
-	settings = {
-		user = {
-			name = "dexter-latcham";
-			email = "flatcapdex@pm.me";
-		};
-	};
-	init.defaultBranch = "main";
-    };
-
-    environment.persistence."/persist".users.dex.files = [
-      ".config/gh/hosts.yml"
-    ];
     systemPackages = with pkgs; [
-      github-cli
       direnv
       pstree
       htop
