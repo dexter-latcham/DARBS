@@ -8,7 +8,6 @@
     cdemu.enable = true;
     gnupg.agent.enable=true;
     thunar.enable = true;
-    kdeconnect.enable = true;
   };
 
 
@@ -19,21 +18,24 @@
     ];
     config.common.default = ["gtk"];
   };
+
   services = {
     displayManager.autoLogin = {
       enable = true;
       user = "dex";
+
     };
     xserver = {
       enable=true;
       autoRepeatDelay=200;
       autoRepeatInterval=35;
 
+      displayManager.lightdm.greeter.enable=false;
       displayManager.sessionCommands = ''
-        xset s off
-        xset -dpms
-        xset s noblank
-      '';
+          xset s off
+          xset -dpms
+          xset s noblank
+        '';
       xautolock = {
         enable = true;
         locker = "${pkgs.slock}/bin/slock";

@@ -4,7 +4,7 @@
     hostName="${host}";
     networkmanager = {
       enable = true;
-      wifi.macAddress = "random";
+      wifi.macAddress = "preserve";
       ethernet.macAddress = "random";
     };
   };
