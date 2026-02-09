@@ -64,6 +64,13 @@ in
   services.xserver.videoDrivers = ["nvidia"];
 
   boot = {
+
+    kernelModules = [
+      "i915" # load intel gpu early for flicker free plymouth
+    ];
+    kernelParams = [
+      "video=efi:1920x1080@60"
+    ];
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = true;
