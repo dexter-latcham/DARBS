@@ -4,7 +4,7 @@
     ".config/kdeconnect"
   ];
 
-  programs.kdeconnect.enable = true;
+  services.kdeconnect.enable = true;
   xsession = {
     initExtra = ''
       kdeconnectd &
