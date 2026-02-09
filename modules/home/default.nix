@@ -7,7 +7,6 @@
 ./firefox.nix
 ./xdg-mime.nix
 ./xresources.nix
-./xsession.nix
 ./zaread.nix
 ./zathura.nix
 ./zsh
@@ -17,5 +16,6 @@
 	./git.nix
   ./discord.nix
   ./spotify.nix
+  ./signal.nix
   ];
 }

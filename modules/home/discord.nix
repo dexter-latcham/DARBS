@@ -1,9 +1,15 @@
-{inputs,...}:{
+{inputs,pkgs,config,...}:{
 
   home.persistence."/persist".directories = [
 		".config/discord"
 	];
   imports = [ inputs.nixcord.homeModules.nixcord ];
+
+  xsession = {
+    initExtra = ''
+      discord --start-minimized &
+    '';
+  };
   programs.nixcord = {
     enable = true;
     openASAR.enable = true;
