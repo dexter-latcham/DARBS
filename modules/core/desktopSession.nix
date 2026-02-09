@@ -78,7 +78,6 @@
     pkgs.xorg.libxcb
     pkgs.gtk3
     pkgs.gtk4
-    pkgs.xdg-desktop-portal-gtk
     pkgs.alacritty
     pkgs.pulsemixer
     pkgs.gnumake
