@@ -1,6 +1,7 @@
 {...}:
 {
   imports = [
+  ./plymouth.nix
   ./impermanence.nix
 ./system.nix
 ./audio.nix
