@@ -1,0 +1,11 @@
+#! /usr/bin/env sh
+
+FORMATTER=alejandra
+if ! command -v $FORMATTER > /dev/null; then
+  echo "$FORMATTER not available"
+  exit 1
+fi
+for file in $(git diff --cached --name-only --diff-filter=ACM | grep "\.nix$"); do
+  $FORMATTER "$file" -q
+  git add "$file"
+done
