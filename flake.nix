@@ -22,14 +22,7 @@
     nixcord.url = "github:FlameFlag/nixcord";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
   };
-  outputs = {
-    self,
-    disko,
-    nixpkgs,
-    dwm,
-    stylix,
-    impermanence,
-    ...
+  outputs = { self, disko, nixpkgs, dwm, stylix, impermanence, ...
   } @ inputs: let
     username = "dex";
     system = "x86_64-linux";
@@ -39,7 +32,6 @@
       config.cudaSupport = true;
     };
   in {
-    formatter.${system} = pkgs.alejandra;
     nixosConfigurations = {
       nixtop = nixpkgs.lib.nixosSystem {
         inherit system;

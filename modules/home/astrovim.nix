@@ -6,6 +6,7 @@
     ".local/share/nvim/mason"
   ];
   home.packages = with pkgs; [
+    alejandra
     nixfmt-tree
     nil
     neovim
