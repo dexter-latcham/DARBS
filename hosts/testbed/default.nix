@@ -1,9 +1,12 @@
-{config, pkgs, ... }:
 {
-  imports = [./hardware-configuration.nix
+  config,
+  pkgs,
+  ...
+}: {
+  imports = [
+    ./hardware-configuration.nix
     ./../../modules/core
   ];
-
 
   services.xserver.videoDrivers = ["intel"];
 

@@ -1,8 +1,7 @@
-{pkgs,...}:{
-
+{pkgs, ...}: {
   home.persistence."/persist".directories = [
-		".config/Signal"
-	];
+    ".config/Signal"
+  ];
 
   xsession = {
     initExtra = ''

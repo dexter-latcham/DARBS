@@ -1,12 +1,17 @@
-{ pkgs, inputs, username, host, ... }:
 {
-  imports = [ inputs.home-manager.nixosModules.home-manager ];
+  pkgs,
+  inputs,
+  username,
+  host,
+  ...
+}: {
+  imports = [inputs.home-manager.nixosModules.home-manager];
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs username host; };
+    extraSpecialArgs = {inherit inputs username host;};
     users.${username} = {
-      imports = [ ./../home ];
+      imports = [./../home];
       home.username = "${username}";
       home.homeDirectory = "/home/${username}";
       home.stateVersion = "26.05";
@@ -27,9 +32,7 @@
     ];
     shell = pkgs.zsh;
 
-   hashedPassword = "$6$2LuiqXfchJhaARg/$VNBv17B/oZ7Wc6sHY/hRLFULq4ASTpcs71NEKSRkeMlmCb11wNNp2VRVNaf0vNOz48IPXNvwffBXrOopt6c/g0";
-
+    hashedPassword = "$6$2LuiqXfchJhaARg/$VNBv17B/oZ7Wc6sHY/hRLFULq4ASTpcs71NEKSRkeMlmCb11wNNp2VRVNaf0vNOz48IPXNvwffBXrOopt6c/g0";
   };
-  nix.settings.allowed-users = [ "${username}" ];
-
+  nix.settings.allowed-users = ["${username}"];
 }

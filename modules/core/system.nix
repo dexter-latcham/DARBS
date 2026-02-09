@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   nix = {
     settings = {
       auto-optimise-store = true;
@@ -34,16 +33,14 @@
     };
   };
 
-
-
-  console.keyMap="uk";
+  console.keyMap = "uk";
   time.timeZone = "Europe/London";
   i18n.defaultLocale = "en_GB.UTF-8";
   system.stateVersion = "26.05";
-  nixpkgs.config.allowUnfree=true;
+  nixpkgs.config.allowUnfree = true;
 
   services = {
-    dbus.enable=true;
+    dbus.enable = true;
 
     udisks2 = {
       enable = true;
@@ -53,8 +50,7 @@
     upower.enable = true;
   };
 
-  environment.systemPackages = with pkgs;[
+  environment.systemPackages = with pkgs; [
     nfs-utils
   ];
-
 }

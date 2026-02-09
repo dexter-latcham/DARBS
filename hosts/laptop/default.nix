@@ -1,14 +1,20 @@
-{config, pkgs, ... }:
-with pkgs; let
-  patchDesktop = pkg: appName: from: to: lib.hiPrio (
-    pkgs.runCommand "$patched-desktop-entry-for-${appName}" {} ''
-      ${coreutils}/bin/mkdir -p $out/share/applications
-      ${gnused}/bin/sed 's#${from}#${to}#g' < ${pkg}/share/applications/${appName}.desktop > $out/share/applications/${appName}.desktop
-      '');
-  GPUOffloadApp = pkg: desktopName: patchDesktop pkg desktopName "^Exec=" "Exec=nvidia-offload ";
-in
 {
-  imports = [./hardware-configuration.nix
+  config,
+  pkgs,
+  ...
+}:
+with pkgs; let
+  patchDesktop = pkg: appName: from: to:
+    lib.hiPrio (
+      pkgs.runCommand "$patched-desktop-entry-for-${appName}" {} ''
+        ${coreutils}/bin/mkdir -p $out/share/applications
+        ${gnused}/bin/sed 's#${from}#${to}#g' < ${pkg}/share/applications/${appName}.desktop > $out/share/applications/${appName}.desktop
+      ''
+    );
+  GPUOffloadApp = pkg: desktopName: patchDesktop pkg desktopName "^Exec=" "Exec=nvidia-offload ";
+in {
+  imports = [
+    ./hardware-configuration.nix
     ./disko-config.nix
     ./../../modules/core
   ];
@@ -18,24 +24,22 @@ in
     (GPUOffloadApp heroic "com.heroicgameslauncher.hgl")
   ];
 
-
   hardware.graphics = {
-    enable=true;
+    enable = true;
     enable32Bit = true;
     extraPackages = with pkgs; [
       intel-media-driver
       intel-vaapi-driver
     ];
   };
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
-
+  environment.sessionVariables = {LIBVA_DRIVER_NAME = "iHD";}; # Force intel-media-driver
 
   hardware.bluetooth = {
     enable = true;
-    powerOnBoot=true;
+    powerOnBoot = true;
     settings = {
       General = {
-        experimental=true;
+        experimental = true;
         Privacy = "device";
         JustWorksRepairing = "always";
         Class = "0x000100";
@@ -45,16 +49,16 @@ in
   };
   services.blueman.enable = true;
   # xbox controller support
-  hardware.xpadneo.enable=true;
+  hardware.xpadneo.enable = true;
 
   hardware.nvidia = {
-    modesetting.enable=true;
+    modesetting.enable = true;
     open = false;
     nvidiaSettings = true;
     prime = {
       offload = {
-	      enable = true;
-	      enableOffloadCmd=true;
+        enable = true;
+        enableOffloadCmd = true;
       };
       intelBusId = "PCI:00:02:0";
       nvidiaBusId = "PCI:01:00:0";
@@ -64,7 +68,6 @@ in
   services.xserver.videoDrivers = ["nvidia"];
 
   boot = {
-
     kernelModules = [
       "i915" # load intel gpu early for flicker free plymouth
     ];
@@ -75,7 +78,7 @@ in
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = true;
     };
-    extraModulePackages = with config.boot.kernelPackages; [ xpadneo ];
+    extraModulePackages = with config.boot.kernelPackages; [xpadneo];
     extraModprobeConfig = ''
       options bluetooth disable_ertm=Y
     '';
@@ -86,15 +89,14 @@ in
     ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="0ab7", TEST=="power/control", ATTR{power/control}="on"
   '';
 
-
   services.fwupd.enable = true; # Firmware updater # fwupdmgr --help
 
   fileSystems."/mnt/nasData" = {
     device = "192.168.8.167:/mnt/MainPool/pc-share";
     fsType = "nfs";
-  
+
     options = [
-      "x-systemd.automount"   # mount on first access
+      "x-systemd.automount" # mount on first access
       "noauto"
       "x-systemd.idle-timeout=600" # Optional: disconnects after 10 mins idle
       "x-systemd.device-timeout=5s" # Time to wait for network before failing

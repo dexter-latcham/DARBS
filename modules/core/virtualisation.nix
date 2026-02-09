@@ -1,5 +1,4 @@
-{...}:
-{
+{...}: {
   virtualisation.docker = {
     enable = true;
 
@@ -7,6 +6,6 @@
       enable = true;
       setSocketVariable = true;
     };
-    enableOnBoot=false;
+    enableOnBoot = false;
   };
 }

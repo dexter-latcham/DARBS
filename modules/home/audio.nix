@@ -1,12 +1,11 @@
 # https://gist.github.com/jtrv/47542c8be6345951802eebcf9dc7da31
-{pkgs, ...}:
-{
+{pkgs, ...}: {
   services.easyeffects = {
-    enable=true;
+    enable = true;
     extraPresets = {
       microphone = {
         input = {
-          blocklist = [ ];
+          blocklist = [];
           "compressor#0" = {
             attack = 15.0;
             boost-amount = 0.0;

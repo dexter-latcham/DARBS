@@ -1,19 +1,21 @@
-{pkgs, username, ... }:
 {
+  pkgs,
+  username,
+  ...
+}: {
   imports = [./suckless];
-  
+
   programs = {
     slock.enable = true;
     zsh.enable = true;
     cdemu.enable = true;
-    gnupg.agent.enable=true;
+    gnupg.agent.enable = true;
     thunar.enable = true;
   };
 
-
   xdg.portal = {
     enable = true;
-    extraPortals = with pkgs;[
+    extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
     ];
     config.common.default = ["gtk"];
@@ -23,19 +25,18 @@
     displayManager.autoLogin = {
       enable = true;
       user = "dex";
-
     };
     xserver = {
-      enable=true;
-      autoRepeatDelay=200;
-      autoRepeatInterval=35;
+      enable = true;
+      autoRepeatDelay = 200;
+      autoRepeatInterval = 35;
 
-      displayManager.lightdm.greeter.enable=false;
+      displayManager.lightdm.greeter.enable = false;
       displayManager.sessionCommands = ''
-          xset s off
-          xset -dpms
-          xset s noblank
-        '';
+        xset s off
+        xset -dpms
+        xset s noblank
+      '';
       xautolock = {
         enable = true;
         locker = "${pkgs.slock}/bin/slock";
@@ -43,14 +44,14 @@
       };
 
       xkb = {
-        layout="gb";
-        variant="";
+        layout = "gb";
+        variant = "";
       };
     };
 
     picom = {
       enable = true;
-      backend="glx";
+      backend = "glx";
       vSync = true;
     };
   };
@@ -106,5 +107,4 @@
     pkgs.st
     pkgs.acpi
   ];
-
 }

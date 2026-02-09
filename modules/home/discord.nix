@@ -1,9 +1,13 @@
-{inputs,pkgs,config,...}:{
-
+{
+  inputs,
+  pkgs,
+  config,
+  ...
+}: {
   home.persistence."/persist".directories = [
-		".config/discord"
-	];
-  imports = [ inputs.nixcord.homeModules.nixcord ];
+    ".config/discord"
+  ];
+  imports = [inputs.nixcord.homeModules.nixcord];
 
   xsession = {
     initExtra = ''
@@ -39,7 +43,7 @@
         fixYoutubeEmbeds.enable = true;
         showHiddenChannels.enable = true;
         showMeYourName.enable = true;
-        vcNarrator= {
+        vcNarrator = {
           enable = true;
           voice = "serena pico";
         };

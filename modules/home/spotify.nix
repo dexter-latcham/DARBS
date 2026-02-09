@@ -1,20 +1,20 @@
-{inputs, lib, pkgs,...}:{
-
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}: {
   home.persistence."/persist".directories = [
-		".config/spotify"
-	];
+    ".config/spotify"
+  ];
 
-
-
-  imports = [ inputs.spicetify-nix.homeManagerModules.spicetify ];
+  imports = [inputs.spicetify-nix.homeManagerModules.spicetify];
   stylix.targets.spicetify.colors.enable = false;
-  programs.spicetify = 
-let
-  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-in
-  {
+  programs.spicetify = let
+    spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  in {
     enable = true;
-    enabledExtensions = with spicePkgs.extensions;[
+    enabledExtensions = with spicePkgs.extensions; [
       loopyLoop
       featureShuffle
       catJamSynced

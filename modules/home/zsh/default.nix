@@ -1,5 +1,8 @@
-{pkgs,config,...}:
 {
+  pkgs,
+  config,
+  ...
+}: {
   home.persistence."/persist".directories = [
     ".local/share/zoxide"
     ".local/share/zsh"
@@ -7,8 +10,8 @@
 
   home.packages = with pkgs; [
     oh-my-posh
-      zoxide # fuzzy cd
-      fzf
+    zoxide # fuzzy cd
+    fzf
   ];
   programs.zsh = {
     enable = true;
@@ -16,31 +19,33 @@
 
     autocd = true; # cd by typing only directory
 
-      defaultKeymap = "viins"; # vim mode
+    defaultKeymap = "viins"; # vim mode
 
-      history = {
-        size = 10000;
-        save = 10000;
+    history = {
+      size = 10000;
+      save = 10000;
 
-        path = "${config.xdg.dataHome}/zsh/history";
-        share = true;
-        ignoreDups = true;
-        ignoreSpace = true;
-        extended = true; # save timestamps
-      };
+      path = "${config.xdg.dataHome}/zsh/history";
+      share = true;
+      ignoreDups = true;
+      ignoreSpace = true;
+      extended = true; # save timestamps
+    };
     shellAliases = import ./alias.nix;
 
     sessionVariables = {
       KEYTIMEOUT = "1"; # timeout when switching vim modes
-        ZSH_AUTOSUGGEST_STRATEGY = "history completion";
+      ZSH_AUTOSUGGEST_STRATEGY = "history completion";
     };
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
-    plugins = with pkgs; [{
-      name = "fzf-tab";
-      src = zsh-fzf-tab;
-    }];
+    plugins = with pkgs; [
+      {
+        name = "fzf-tab";
+        src = zsh-fzf-tab;
+      }
+    ];
 
     completionInit = ''
       # case insensitive
@@ -50,7 +55,7 @@
 
       # prefer history
       zstyle ':completion:*' completer _complete _history
-      '';
+    '';
 
     initContent = ''
       # startup profiling
@@ -103,6 +108,6 @@
 
       # oh-my-posh prompt
       eval "$(${pkgs.oh-my-posh}/bin/oh-my-posh init zsh --config ${./prompt.toml})"
-      '';
+    '';
   };
 }

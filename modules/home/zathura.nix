@@ -5,7 +5,7 @@
     options = {
       guioptions = "v";
       recolor = "true";
-      selection-clipboard="clipboard";
+      selection-clipboard = "clipboard";
       adjust-open = "width";
       statusbar-basename = true;
       render-loading = false;

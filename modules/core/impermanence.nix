@@ -1,13 +1,17 @@
-{inputs, lib, ...}:{
+{
+  inputs,
+  lib,
+  ...
+}: {
   programs.fuse.userAllowOther = true;
   users.users.dex.extraGroups = ["fuse"];
   boot.initrd.availableKernelModules = ["btrfs" "dm-mod" "dm-crypt"];
   boot.initrd.kernelModules = ["btrfs" "dm-mod" "dm-crypt"];
   boot.initrd.systemd.services.btrfs-setup = {
     description = "setup new root subvolume";
-    wantedBy = [ "initrd.target" ];
-    after = [ "dev-mapper-cryptroot.device" ];
-    requires = [ "dev-mapper-cryptroot.device" ];
+    wantedBy = ["initrd.target"];
+    after = ["dev-mapper-cryptroot.device"];
+    requires = ["dev-mapper-cryptroot.device"];
     before = ["sysroot.mount"];
     serviceConfig.Type = "oneshot";
     serviceConfig.RemainAfterExit = true;
@@ -81,10 +85,22 @@
         "Pictures"
         "Documents"
         "Videos"
-        { directory = ".gnupg"; mode = "0700"; }
-        { directory = ".ssh"; mode = "0700"; }
-        { directory = ".nixops"; mode = "0700"; }
-        { directory = ".local/share/keyrings"; mode = "0700"; }
+        {
+          directory = ".gnupg";
+          mode = "0700";
+        }
+        {
+          directory = ".ssh";
+          mode = "0700";
+        }
+        {
+          directory = ".nixops";
+          mode = "0700";
+        }
+        {
+          directory = ".local/share/keyrings";
+          mode = "0700";
+        }
         ".local/share/direnv"
       ];
       files = [

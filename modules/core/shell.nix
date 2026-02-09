@@ -1,12 +1,11 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   users.defaultUserShell = pkgs.zsh;
 
   environment = {
     variables = {
-      TERMINAL="st";
-      EDITOR="nvim";
-      BROWSER="librewolf";
+      TERMINAL = "st";
+      EDITOR = "nvim";
+      BROWSER = "librewolf";
     };
     shells = with pkgs; [
       zsh

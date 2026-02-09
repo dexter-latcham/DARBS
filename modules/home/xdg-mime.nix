@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   xdg = {
     enable = true;
     mime.enable = true;
@@ -8,7 +11,6 @@
   #home.packages = [
   #  pkgs.xdg-utils
   #];
-
 
   xdg.mimeApps = {
     enable = true;

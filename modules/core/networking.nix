@@ -1,7 +1,10 @@
-{pkgs, host, ...}:
 {
+  pkgs,
+  host,
+  ...
+}: {
   networking = {
-    hostName="${host}";
+    hostName = "${host}";
     networkmanager = {
       enable = true;
       wifi.macAddress = "preserve";

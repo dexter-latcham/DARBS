@@ -22,17 +22,24 @@
     nixcord.url = "github:FlameFlag/nixcord";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
   };
-  outputs = { self, disko, nixpkgs,dwm, stylix, impermanence, ...}@inputs:
-  let
-      username = "dex";
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-        config.cudaSupport = true;
-      };
-  in
-  {
+  outputs = {
+    self,
+    disko,
+    nixpkgs,
+    dwm,
+    stylix,
+    impermanence,
+    ...
+  } @ inputs: let
+    username = "dex";
+    system = "x86_64-linux";
+    pkgs = import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+      config.cudaSupport = true;
+    };
+  in {
+    formatter.${system} = pkgs.alejandra;
     nixosConfigurations = {
       nixtop = nixpkgs.lib.nixosSystem {
         inherit system;
@@ -41,11 +48,11 @@
           disko.nixosModules.disko
           dwm.nixosModules.default
           stylix.nixosModules.stylix
-            ./hosts/laptop
-          ];
+          ./hosts/laptop
+        ];
         specialArgs = {
-            host = "nixtop";
-            inherit self inputs username;
+          host = "nixtop";
+          inherit self inputs username;
         };
       };
     };
