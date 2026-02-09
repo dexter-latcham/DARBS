@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs,inputs,...}: {
   nix = {
     settings = {
       auto-optimise-store = true;
@@ -52,5 +52,7 @@
 
   environment.systemPackages = with pkgs; [
     nfs-utils
+    inputs.nix-auto-follow.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
+  
 }

@@ -13,14 +13,27 @@
     };
     disko = {
       url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
+
     };
 
     impermanence = {
       url = "github:nix-community/impermanence";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixcord.url = "github:FlameFlag/nixcord";
-    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
+    nixcord = {
+      url = "github:FlameFlag/nixcord";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-auto-follow = {
+      url = "github:fzakaria/nix-auto-follow";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     self,
