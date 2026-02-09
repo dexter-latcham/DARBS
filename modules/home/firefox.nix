@@ -78,7 +78,19 @@
               urls = [{ template = "https://mynixos.com/search?q={searchTerms}"; }];
               iconUpdateUrl = "https://mynixos.com/favicon-dark.svg";
               updateInterval = 24 * 60 * 60 * 1000;
+              definedAliases = [ "!mn" ];
+            };
+            nixos = {
+              urls = [{ template = "https://search.nixos.org/options?channel=unstable&query={searchTerms}"; }];
+              iconUpdateUrl = "https://search.nixos.org/favicon-96x96.png";
+              updateInterval = 24 * 60 * 60 * 1000;
               definedAliases = [ "!n" ];
+            };
+            hmOpts = {
+              urls = [{ template = "https://home-manager-options.extranix.com/?query={searchTerms}&release=master"; }];
+              iconUpdateUrl = "https://home-manager-options.extranix.com/images/favicon.png";
+              updateInterval = 24 * 60 * 60 * 1000;
+              definedAliases = [ "!hm" ];
             };
             "wikipedia".metaData.hidden = true;
             "perplexity".metaData.hidden = true;
