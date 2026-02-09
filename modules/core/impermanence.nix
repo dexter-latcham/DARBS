@@ -6,10 +6,11 @@
   boot.initrd.systemd.services.btrfs-setup = {
     description = "setup new root subvolume";
     wantedBy = [ "initrd.target" ];
-    after = ["systemd-cryptsetup@crypted.service"];
+    after = [ "dev-mapper-cryptroot.device" ];
+    requires = [ "dev-mapper-cryptroot.device" ];
     before = ["sysroot.mount"];
     serviceConfig.Type = "oneshot";
-    unitConfig.DefaultDependencies = "no";
+    serviceConfig.RemainAfterExit = true;
     script = ''
       if [ ! -e /dev/mapper/cryptroot ]; then
           echo "❌ LUKS device not found - trying to open..."
