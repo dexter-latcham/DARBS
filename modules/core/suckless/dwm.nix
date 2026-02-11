@@ -52,7 +52,7 @@ in {
     {
       mod = "MODKEY|ShiftMask";
       key = "s";
-      app = "${screenshotScript}/bin/screnshot";
+      app = "${screenshotScript}/bin/screenshot";
     }
     {
       key = "BackSpace";
