@@ -102,6 +102,11 @@ in {
     sb-net
   ];
 
+  xsession = {
+    initExtra = ''
+      dwmblocks &
+    '';
+  };
   networking.networkmanager.dispatcherScripts = [
     {
       source = pkgs.writeText "sb-net-update" ''

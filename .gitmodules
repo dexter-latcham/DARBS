@@ -1,3 +1,3 @@
-[submodule "modules/core/suckless/dwm"]
-	path = modules/core/suckless/dwm
+[submodule "suckless/dwm"]
+	path = suckless/dwm
 	url = https://github.com/dexter-latcham/dwm
