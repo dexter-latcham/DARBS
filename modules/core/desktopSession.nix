@@ -1,6 +1,7 @@
 {
   pkgs,
   username,
+
   ...
 }: {
   imports = [./suckless];
@@ -66,6 +67,7 @@
     pkgs.libxinerama
     pkgs.xclip
     (pkgs.callPackage ./stremio-linux-shell.nix {})
+    pkgs.teamspeak6-client
     pkgs.vim
     pkgs.wget
     pkgs.neovim

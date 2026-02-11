@@ -1,4 +1,4 @@
-{pkgs, ...}: let
+{pkgs,inputs,  ...}: let
   pwrMgrScript = pkgs.writeShellApplication {
     name = "pwrMgr";
     runtimeInputs = [pkgs.systemd pkgs.xset];
@@ -43,6 +43,7 @@
     '';
   };
 in {
+  imports = [ inputs.dwm.nixosModules.default ];
   programs.dwm.enable = true;
   environment.systemPackages = with pkgs; [
     screenshotScript

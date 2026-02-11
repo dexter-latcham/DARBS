@@ -3,6 +3,7 @@
   lib,
   ...
 }: {
+  imports = [ inputs.impermanence.nixosModules.impermanence ];
   programs.fuse.userAllowOther = true;
   users.users.dex.extraGroups = ["fuse"];
   boot.initrd.availableKernelModules = ["btrfs" "dm-mod" "dm-crypt"];

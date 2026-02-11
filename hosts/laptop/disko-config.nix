@@ -4,7 +4,9 @@
 # cd /mnt/nixos/
 # sudo nixos-install --flake . --max-jobs 4
 # reboot
+{inputs, ...}:
 {
+  imports = [inputs.disko.nixosModules.disko ];
   disko.devices = {
     disk = {
       main = {
