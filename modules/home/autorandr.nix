@@ -1,4 +1,5 @@
 {
+  self,
   pkgs,
   config,
   ...
@@ -6,13 +7,24 @@
   home.packages = with pkgs; [
     autorandr
     feh
+    xlayoutdisplay
   ];
 
+
+  # not needed, home manager runs autorandr as a one shot
+  # xsession.initExtra = ''
+  #   autorandr --change --force
+  # '';
+  services.autorandr.enable = true;
   programs.autorandr = {
     enable = true;
     hooks.postswitch = {
-      set-wallpaper = ''
-        ${pkgs.xwallpaper}/bin/xwallpaper --zoom /etc/nixos/walls/current.jpeg &
+      no-profile = ''
+        if ! ${pkgs.autorandr}/bin/autorandr --debug | grep -q "detected"; then
+           ${pkgs.xlayoutdisplay}/bin/xlayoutdisplay -q
+        fi
+
+        ${pkgs.xwallpaper}/bin/xwallpaper --zoom ${self}/walls/current.jpeg &
       '';
     };
     profiles = {
@@ -66,8 +78,4 @@
       };
     };
   };
-  xsession.initExtra = ''
-     autorandr --change --force
-    ${pkgs.xwallpaper}/bin/xwallpaper --zoom /etc/nixos/walls/current.jpeg
-  '';
 }
