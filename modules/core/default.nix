@@ -11,5 +11,6 @@
     ./virtualisation.nix
     ./stylix.nix
     ./steam.nix
+    ./pia.nix
   ];
 }
