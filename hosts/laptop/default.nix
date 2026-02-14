@@ -3,26 +3,34 @@
   pkgs,
   ...
 }:
-with pkgs; let
-  patchDesktop = pkg: appName: from: to:
-    lib.hiPrio (
-      pkgs.runCommand "$patched-desktop-entry-for-${appName}" {} ''
-        ${coreutils}/bin/mkdir -p $out/share/applications
-        ${gnused}/bin/sed 's#${from}#${to}#g' < ${pkg}/share/applications/${appName}.desktop > $out/share/applications/${appName}.desktop
-      ''
-    );
-  GPUOffloadApp = pkg: desktopName: patchDesktop pkg desktopName "^Exec=" "Exec=nvidia-offload ";
-in {
+# with pkgs; let
+#   patchDesktop = pkg: appName: from: to:
+#     lib.hiPrio (
+#       pkgs.runCommand "$patched-desktop-entry-for-${appName}" {} ''
+#         ${coreutils}/bin/mkdir -p $out/share/applications
+#         ${gnused}/bin/sed 's#${from}#${to}#g' < ${pkg}/share/applications/${appName}.desktop > $out/share/applications/${appName}.desktop
+#       ''
+#     );
+#   GPUOffloadApp = pkg: desktopName: patchDesktop pkg desktopName "^Exec=" "Exec=nvidia-offload ";
+# in 
+{
   imports = [
     ./hardware-configuration.nix
     ./disko-config.nix
     ./../../modules/core
   ];
 
-  environment.systemPackages = with pkgs; [
-    (GPUOffloadApp steam "steam")
-    (GPUOffloadApp heroic "com.heroicgameslauncher.hgl")
-  ];
+  # environment.systemPackages = with pkgs; [
+  #   (GPUOffloadApp steam "steam")
+  #   (GPUOffloadApp heroic "com.heroicgameslauncher.hgl")
+  # ];
+
+  environment.sessionVariables = {
+    WLR_NO_HARDWARE_CURSORS = "1";  # Fix cursor issues on Wayland
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    GBM_BACKEND = "nvidia-drm";
+    LIBVA_DRIVER_NAME = "nvidia";
+  };
 
   hardware.graphics = {
     enable = true;
@@ -32,7 +40,6 @@ in {
       intel-vaapi-driver
     ];
   };
-  environment.sessionVariables = {LIBVA_DRIVER_NAME = "iHD";}; # Force intel-media-driver
 
   hardware.bluetooth = {
     enable = true;
@@ -47,19 +54,22 @@ in {
       };
     };
   };
-  services.blueman.enable = true;
+
   # xbox controller support
   hardware.xpadneo.enable = true;
 
   hardware.nvidia = {
     modesetting.enable = true;
-    open = false;
+    open = true;
+    package = config.boot.kernelPackages.nvidiaPackages.production;
+    powerManagement.enable = true;
     nvidiaSettings = true;
     prime = {
-      offload = {
-        enable = true;
-        enableOffloadCmd = true;
-      };
+      sync.enable = true;
+      # offload = {
+      #   enable = true;
+      #   enableOffloadCmd = true;
+      # };
       intelBusId = "PCI:00:02:0";
       nvidiaBusId = "PCI:01:00:0";
     };
@@ -83,11 +93,6 @@ in {
       options bluetooth disable_ertm=Y
     '';
   };
-
-  services.udev.extraRules = ''
-    #dont disable microphone
-    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="0ab7", TEST=="power/control", ATTR{power/control}="on"
-  '';
 
   services.fwupd.enable = true; # Firmware updater # fwupdmgr --help
 
