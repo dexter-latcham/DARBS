@@ -16,5 +16,6 @@
     ./discord.nix
     ./spotify.nix
     ./signal.nix
+    ./matrix.nix
   ];
 }
