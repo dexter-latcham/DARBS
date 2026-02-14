@@ -102,11 +102,9 @@ in {
     sb-net
   ];
 
-  xsession = {
-    initExtra = ''
+  services.xserver.windowManager.dwm.extraSessionCommands = ''
       dwmblocks &
     '';
-  };
   networking.networkmanager.dispatcherScripts = [
     {
       source = pkgs.writeText "sb-net-update" ''
