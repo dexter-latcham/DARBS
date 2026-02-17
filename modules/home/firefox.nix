@@ -11,6 +11,7 @@
   };
 
   home.file.".mozilla/native-messaging-hosts".enable = false;
+  stylix.targets.firefox.enable = false;
   programs.firefox = {
     enable = true;
     package = pkgs.librewolf;

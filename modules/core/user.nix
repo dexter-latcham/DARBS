@@ -17,6 +17,9 @@
       home.homeDirectory = "/home/${username}";
       home.stateVersion = "26.05";
       programs.home-manager.enable = true;
+      
+      # used to allow autostart progs from home manager
+      xsession.enable=true;
     };
     backupFileExtension = "hm-backup";
   };

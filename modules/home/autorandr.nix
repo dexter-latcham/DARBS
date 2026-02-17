@@ -13,7 +13,7 @@
 
   # not needed, home manager runs autorandr as a one shot
   xsession.initExtra = ''
-    autorandr --change
+    autorandr --change &
   '';
   # services.autorandr.enable = true;
   programs.autorandr = {

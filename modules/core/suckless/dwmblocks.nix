@@ -81,8 +81,8 @@
     buildInputs = [
       pkgs.libx11
       pkgs.pkg-config
-      pkgs.xorg.libxcb
-      pkgs.xorg.xcbutil
+      pkgs.libxcb
+      pkgs.xcbutil
     ];
 
     postPatch = ''cp ${configFile} config.h '';

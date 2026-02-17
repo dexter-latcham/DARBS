@@ -17,5 +17,6 @@
     ./spotify.nix
     ./signal.nix
     ./matrix.nix
+    ./obsidian.nix
   ];
 }

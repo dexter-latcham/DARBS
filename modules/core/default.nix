@@ -12,5 +12,8 @@
     ./stylix.nix
     ./steam.nix
     ./pia.nix
+    ./security.nix
+    ./flatpak.nix
+    ./tooling.nix
   ];
 }

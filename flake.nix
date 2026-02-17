@@ -23,7 +23,7 @@
     };
     nixcord = {
       url = "github:FlameFlag/nixcord";
-      # inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
@@ -38,6 +38,11 @@
       url = "github:mrehanabbasi/pia.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
+    nox = {
+      url = "github:madsbv/nix-options-search";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     self,
@@ -48,8 +53,7 @@
     system = "x86_64-linux";
     host = "nixtop";
   in {
-    nixosConfigurations = {
-      nixtop = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.nixtop = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
           ./hosts/laptop
@@ -59,5 +63,4 @@
         };
       };
     };
-  };
 }

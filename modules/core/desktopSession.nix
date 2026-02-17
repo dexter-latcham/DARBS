@@ -72,15 +72,15 @@
     pkgs.wget
     pkgs.neovim
     pkgs.fontconfig
-    pkgs.xorg.xinit
-    pkgs.xorg.xrdb
-    pkgs.xorg.xsetroot
-    pkgs.xorg.xev
+    pkgs.xinit
+    pkgs.xrdb
+    pkgs.xsetroot
+    pkgs.xev
     pkgs.gnumake
-    pkgs.xorg.libX11.dev
-    pkgs.xorg.libXft
-    pkgs.xorg.libXinerama
-    pkgs.xorg.libxcb
+    pkgs.libx11.dev
+    pkgs.libxft
+    pkgs.libxinerama
+    pkgs.libxcb
     pkgs.gtk3
     pkgs.gtk4
     pkgs.alacritty
@@ -108,5 +108,6 @@
     pkgs.arandr
     pkgs.st
     pkgs.acpi
+    pkgs.pkg-config
   ];
 }

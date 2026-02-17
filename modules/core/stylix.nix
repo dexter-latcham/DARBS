@@ -11,7 +11,6 @@
       package = pkgs.papirus-icon-theme;
       dark = "Papirus-Dark";
     };
-
     fonts = {
       serif = {
         package = pkgs.dejavu_fonts;
