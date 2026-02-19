@@ -14,5 +14,6 @@
     fd
     nodejs
     clang-tools
+    rust-analyzer
   ];
 }
