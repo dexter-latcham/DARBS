@@ -11,7 +11,7 @@
       	'🐻 hibernate') systemctl hibernate -i ;;
       	'💤 sleep') systemctl suspend -i ;;
       	'🔃 reboot') systemctl reboot -i ;;
-      	'🖥️shutdown') systemctl poweroff -i ;;
+      	'🖥️ shutdown') systemctl poweroff -i ;;
       	'📺 display off') xset dpms force off ;;
       	*) exit 1 ;;
       esac
