@@ -9,7 +9,7 @@
 
     iconTheme = {
       package = lib.mkDefault pkgs.papirus-icon-theme;
-      name = "Papirus";
+      name = lib.mkDefault "Papirus";
     };
 
     settings = {
