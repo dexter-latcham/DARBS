@@ -19,7 +19,7 @@
       programs.home-manager.enable = true;
       
       # used to allow autostart progs from home manager
-      xsession.enable=true;
+      # xsession.enable=true;
     };
     backupFileExtension = "hm-backup";
   };

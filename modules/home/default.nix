@@ -1,11 +1,11 @@
 {...}: {
   imports = [
-    ./autorandr.nix
+    # ./autorandr.nix
     ./chromium.nix
     ./dunst.nix
     ./firefox.nix
     ./xdg-mime.nix
-    ./xresources.nix
+    # ./xresources.nix
     ./zaread.nix
     ./zathura.nix
     ./zsh

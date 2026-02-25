@@ -9,11 +9,11 @@
   ];
   imports = [inputs.nixcord.homeModules.nixcord];
 
-  xsession = {
-    initExtra = ''
-      discord --start-minimized &
-    '';
-  };
+  # xsession = {
+  #   initExtra = ''
+  #     discord --start-minimized &
+  #   '';
+  # };
   programs.nixcord = {
     enable = true;
     openASAR.enable = true;
