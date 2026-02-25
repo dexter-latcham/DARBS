@@ -28,10 +28,10 @@ in
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
-    extraPackages = with pkgs; [
-      intel-media-driver
-      intel-vaapi-driver
-    ];
+    # extraPackages = with pkgs; [
+    #   intel-media-driver
+    #   intel-vaapi-driver
+    # ];
   };
 
   hardware.bluetooth = {
@@ -74,7 +74,7 @@ in
     MOZ_ENABLE_WAYLAND = "1";
     NIXOS_OZONE_WL = "1";
   };
-  # services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = ["nvidia"];
 
   boot = {
     kernelModules = [

@@ -40,6 +40,7 @@
   environment.systemPackages = with pkgs;[
     dwl
     foot
+    wmenu
     wlr-randr
     wl-clipboard
 
