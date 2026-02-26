@@ -23,21 +23,41 @@ in
   environment.systemPackages = with pkgs; [
     (GPUOffloadApp steam "steam")
     (GPUOffloadApp heroic "com.heroicgameslauncher.hgl")
+    # asusctl
   ];
+  # services.asusd = {
+  #   enable = true;
+  #   enableUserService = true;
+  # };
+  # services.supergfxd = {
+  #   enable=true;
+  #   settings = {
+  #     mode = "Hybrid"; 
+  #   };
+  # };
 
   # environment.sessionVariables = {
-  #   WLR_NO_HARDWARE_CURSORS = "1";  # Fix cursor issues on Wayland
-  #   __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-  #   GBM_BACKEND = "nvidia-drm";
   #   LIBVA_DRIVER_NAME = "nvidia";
   # };
   #
+
+  environment.sessionVariables = {
+    # WLR_NO_HARDWARE_CURSORS = "1";  # Fix cursor issues on Wayland
+    # __GLX_VENDOR_LIBRARY_NAME = "nvidia"; # force opengl to use nvidia proprietry implementation
+    # GBM_BACKEND = "nvidia-drm"; # tell gbm apps (vulkan, wayland compositors etc) to use nvidia gpu directly
+    # LIBVA_DRIVER_NAME = "iHD";
+  };
+
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
     extraPackages = with pkgs; [
       intel-media-driver
+      vpl-gpu-rt
       intel-vaapi-driver
+      # libva-vdpau-driver# vdpau bridge for nvidia
+      # libvdpau-va-gl #intel hardware accelerated video playback
+      # vdpauinfo
     ];
   };
 
@@ -61,8 +81,8 @@ in
   hardware.nvidia = {
     modesetting.enable = true;
     open = false;
-    # package = config.boot.kernelPackages.nvidiaPackages.production;
-    powerManagement.enable = true;
+    # package = config.boot.kernelPackages.nvidiaPackages.stable;
+    powerManagement.enable = false;
     nvidiaSettings = true;
     prime = {
       # sync.enable = true;
@@ -70,20 +90,25 @@ in
         enable = true;
         enableOffloadCmd = true;
       };
-      intelBusId = "PCI:00:02:0";
-      nvidiaBusId = "PCI:01:00:0";
+      intelBusId = "PCI:0@0:2:0";
+      nvidiaBusId = "PCI:1@0:0:0";
     };
   };
 
   services.xserver.videoDrivers = ["nvidia"];
 
+  hardware.enableRedistributableFirmware=true;
   boot = {
-    kernelModules = [
-      "i915" # load intel gpu early for flicker free plymouth
+# https://wiki.nixos.org/wiki/Intel_Graphics#12th_Gen_(Alder_Lake)
+    kernelParams = [ "i915.force_probe=46a6" 
+      "i915.enable_guc=3"
     ];
-    kernelParams = [
-      "video=efi:1920x1080@60"
-    ];
+    # kernelModules = [
+      # "i915" # load intel gpu early for flicker free plymouth
+    # ];
+    # kernelParams = [
+      # "video=efi:1920x1080@60"
+    # ];
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = true;
