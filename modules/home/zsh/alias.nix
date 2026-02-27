@@ -1,7 +1,9 @@
 {
   ns = "sudo nixos-rebuild switch --flake /etc/nixos";
+  nw = "sudo nixos-rebuild switch --flake /etc/nixos/wayland";
   cd = "z";
-  clip = "xclip -selection clipboard";
+  clip = "wl-copy";
+  # clip = "xclip -selection clipboard";
   nivm = "nvim";
   v = "nvim";
   n = "nvim";

@@ -18,6 +18,7 @@
     ./signal.nix
     ./matrix.nix
     ./obsidian.nix
-    # ./hyprland.nix
+    ./kanshi.nix 
+    ./alacritty.nix
   ];
 }
