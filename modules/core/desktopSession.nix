@@ -4,7 +4,7 @@
 
   ...
 }: {
-  # imports = [./suckless];
+  imports = [./wayland];
 
   programs = {
     zsh.enable = true;
@@ -15,34 +15,44 @@
 
   xdg.portal = {
     enable = true;
+    xdgOpenUsePortal =true;
     wlr.enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
     ];
-    config.common.default = ["gtk"];
+    # config = {
+      # common.default = ["gtk"];
+      # hyprland.default = [
+      #   "gtk"
+        # "hyprland"
+      # ];
+    # };
   };
 
   security.polkit.enable = true;
   programs.dconf.enable = true;
-  services.seatd.enable = true;
+
+  # programs.hyprland = {
+  #   enable = true;
+  #   # withUWSM = true;
+  #   xwayland.enable = true;
+  # };
+
   services = {
-    greetd = {
+    # seatd.enable = true;
+    # getty.autologinUser = "dex";
+    xserver = {
       enable = true;
-      settings = {
-        default_session = {
-          command = "${pkgs.dwl}/bin/dwl";
-          user = "dex";
-        };
-      };
+      xkb.layout = "gb";
     };
+    # displayManager.autoLogin = {
+    #   enable = true;
+    #   user = "dex";
+    # };
+    # libinput.enable = true;
   };
 
   environment.systemPackages = with pkgs;[
-    dwl
-    foot
-    wmenu
-    wlr-randr
-    wl-clipboard
 
     r2modman
     devenv

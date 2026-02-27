@@ -17,9 +17,9 @@ in
   imports = [
     ./hardware-configuration.nix
     ./disko-config.nix
+    ./bluetooth.nix
     ./../../modules/core
   ];
-
   environment.systemPackages = with pkgs; [
     (GPUOffloadApp steam "steam")
     (GPUOffloadApp heroic "com.heroicgameslauncher.hgl")
@@ -28,25 +28,13 @@ in
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
-    # extraPackages = with pkgs; [
-    #   intel-media-driver
-    #   intel-vaapi-driver
-    # ];
+    extraPackages = with pkgs; [
+      intel-media-driver
+      vpl-gpu-rt
+      intel-vaapi-driver
+    ];
   };
 
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-    settings = {
-      General = {
-        experimental = true;
-        Privacy = "device";
-        JustWorksRepairing = "always";
-        Class = "0x000100";
-        FastConnectable = true;
-      };
-    };
-  };
 
   # xbox controller support
   hardware.xpadneo.enable = true;
@@ -54,8 +42,8 @@ in
   hardware.nvidia = {
     modesetting.enable = true;
     open = false;
-    # package = config.boot.kernelPackages.nvidiaPackages.production;
-    powerManagement.enable = true;
+    # package = config.boot.kernelPackages.nvidiaPackages.stable;
+    powerManagement.enable = false;
     nvidiaSettings = true;
     prime = {
       # sync.enable = true;
@@ -63,8 +51,8 @@ in
         enable = true;
         enableOffloadCmd = true;
       };
-      intelBusId = "PCI:00:02:0";
-      nvidiaBusId = "PCI:01:00:0";
+      intelBusId = "PCI:0@0:2:0";
+      nvidiaBusId = "PCI:1@0:0:0";
     };
   };
 
@@ -74,15 +62,10 @@ in
     MOZ_ENABLE_WAYLAND = "1";
     NIXOS_OZONE_WL = "1";
   };
+
   services.xserver.videoDrivers = ["nvidia"];
 
   boot = {
-    kernelModules = [
-      "i915" # load intel gpu early for flicker free plymouth
-    ];
-    kernelParams = [
-      "nvidia-drm.modeset=1"
-    ];
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = true;
