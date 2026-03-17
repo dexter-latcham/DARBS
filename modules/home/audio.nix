@@ -1,18 +1,18 @@
 # https://gist.github.com/jtrv/47542c8be6345951802eebcf9dc7da31
 {pkgs, ...}: {
-#   home.file.".config/easyeffects/db/easyeffectsrc".text = ''
-# [EffectsPipelines]
-# inactivityTimerEnable=false
-# processAllOutputs=false
-#
-# [Presets]
-# lastLoadedInputPreset=microphone
-#
-# [StreamInputs]
-# mostUsedPresets=microphone
-# plugins=rnnoise#0,deepfilternet#0,gate#0,equalizer#0,compressor#0,deesser#0,limiter#0
-# usedPresets=microphone:1
-#   '';
+  home.file.".config/easyeffects/db/easyeffectsrc".text = ''
+[EffectsPipelines]
+inactivityTimerEnable=false
+processAllOutputs=false
+
+[Presets]
+lastLoadedInputPreset=microphone
+
+[StreamInputs]
+mostUsedPresets=microphone
+plugins=rnnoise#0,deepfilternet#0,gate#0,equalizer#0,compressor#0,deesser#0,limiter#0
+usedPresets=microphone:1
+  '';
   services.easyeffects = {
     enable = true;
     extraPresets = {

@@ -20,11 +20,11 @@ in
     ./../../modules/core
   ];
 
-  environment.systemPackages = with pkgs; [
-    (GPUOffloadApp steam "steam")
-    (GPUOffloadApp heroic "com.heroicgameslauncher.hgl")
-    # asusctl
-  ];
+  # environment.systemPackages = with pkgs; [
+  #   (GPUOffloadApp steam "steam")
+  #   (GPUOffloadApp heroic "com.heroicgameslauncher.hgl")
+  #   # asusctl
+  # ];
   # services.asusd = {
   #   enable = true;
   #   enableUserService = true;

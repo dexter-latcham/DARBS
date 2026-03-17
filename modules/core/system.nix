@@ -39,8 +39,13 @@
   system.stateVersion = "26.05";
   nixpkgs.config.allowUnfree = true;
 
+
+  # services.dbus.implementation = "broker"; # Use D-Bus Broker for better performance and reliability
   services = {
-    dbus.enable = true;
+    dbus = {
+      enable = true;
+      implementation = "broker";
+    };
 
     udisks2 = {
       enable = true;

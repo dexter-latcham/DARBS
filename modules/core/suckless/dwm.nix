@@ -4,7 +4,7 @@
     runtimeInputs = [pkgs.systemd pkgs.xset];
     text = ''
         #!/usr/bin/env sh
-      case "$(printf "🔒 lock\n🚪 leave dwm\n♻️ renew dwm\n🐻 hibernate\n🔃 reboot\n🖥️shutdown\n💤 sleep\n📺 display off" | dmenu -i -p 'Action: ')" in
+      case "$(printf "🔒 lock\n🚪 leave dwm\n♻️ renew dwm\n🐻 hibernate\n🔃 reboot\n🖥️ shutdown\n💤 sleep\n📺 display off" | dmenu -i -p 'Action: ')" in
       	'🔒 lock') slock ;;
       	"🚪 leave dwm") kill -TERM "$(pidof dwm)" ;;
       	"♻️ renew dwm") kill -HUP "$(pidof dwm)" ;;
@@ -45,8 +45,9 @@
 in {
   imports = [ inputs.dwm.nixosModules.default ];
   programs.dwm.enable = true;
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = [
     screenshotScript
+    pwrMgrScript
   ];
   programs.dwm.appKeybinds = [
     {

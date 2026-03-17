@@ -32,7 +32,8 @@
       autoRepeatDelay = 200;
       autoRepeatInterval = 35;
 
-      displayManager.lightdm.greeter.enable = false;
+
+      displayManager.lightdm.enable=true;
       displayManager.sessionCommands = ''
         xset s off
         xset -dpms
@@ -49,7 +50,6 @@
         variant = "";
       };
     };
-
     picom = {
       enable = true;
       backend = "glx";
@@ -61,7 +61,6 @@
     pkgs.r2modman
     pkgs.devenv
     pkgs.nodejs
-    #pkgs.lmstudio
     pkgs.notion
     pkgs.xwallpaper
     pkgs.libxinerama

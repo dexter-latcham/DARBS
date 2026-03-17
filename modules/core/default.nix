@@ -8,12 +8,14 @@
     ./desktopSession.nix
     ./shell.nix
     ./user.nix
-    ./virtualisation.nix
+    # ./virtualisation.nix
     ./stylix.nix
     ./steam.nix
     ./pia.nix
     ./security.nix
     ./flatpak.nix
     ./tooling.nix
+    ./lmstudio.nix
+    # ./wayland/default.nix
   ];
 }

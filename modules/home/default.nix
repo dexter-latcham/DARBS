@@ -18,5 +18,6 @@
     ./signal.nix
     ./matrix.nix
     ./obsidian.nix
+    # ./kanshi.nix
   ];
 }
