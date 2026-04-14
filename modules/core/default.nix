@@ -16,6 +16,7 @@
     ./flatpak.nix
     ./tooling.nix
     ./lmstudio.nix
-    # ./wayland/default.nix
+    ./wayland/default.nix
+    ./kdeconnect.nix
   ];
 }

@@ -17,7 +17,8 @@
     ./spotify.nix
     ./signal.nix
     ./matrix.nix
-    ./obsidian.nix
+    # ./obsidian.nix
     # ./kanshi.nix
+    # ./wpaper.nix
   ];
 }

@@ -43,10 +43,10 @@
         fixYoutubeEmbeds.enable = true;
         showHiddenChannels.enable = true;
         showMeYourName.enable = true;
-        vcNarrator = {
-          enable = true;
-          voice = "serena pico";
-        };
+        # vcNarrator = {
+        #   enable = true;
+        #   voice = "serena pico";
+        # };
       };
     };
   };

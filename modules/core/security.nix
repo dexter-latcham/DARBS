@@ -6,5 +6,5 @@
   # dbus api for apps to store secrets
   services.gnome.gnome-keyring.enable = true;
   # lightdm unlock gnome keyring
-  security.pam.services.lightdm.enableGnomeKeyring = true;
+  # security.pam.services.lightdm.enableGnomeKeyring = true;
 }

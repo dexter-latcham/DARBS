@@ -19,12 +19,13 @@ in
     ./disko-config.nix
     ./../../modules/core
   ];
+  services.libinput.touchpad.naturalScrolling = true;
 
-  # environment.systemPackages = with pkgs; [
-  #   (GPUOffloadApp steam "steam")
-  #   (GPUOffloadApp heroic "com.heroicgameslauncher.hgl")
-  #   # asusctl
-  # ];
+  environment.systemPackages = with pkgs; [
+    (GPUOffloadApp steam "steam")
+    (GPUOffloadApp heroic "com.heroicgameslauncher.hgl")
+    # asusctl
+  ];
   # services.asusd = {
   #   enable = true;
   #   enableUserService = true;
@@ -51,38 +52,38 @@ in
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
-    extraPackages = with pkgs; [
-      intel-media-driver
-      vpl-gpu-rt
-      intel-vaapi-driver
+    # extraPackages = with pkgs; [
+    #   intel-media-driver
+    #   vpl-gpu-rt
+    #   intel-vaapi-driver
       # libva-vdpau-driver# vdpau bridge for nvidia
       # libvdpau-va-gl #intel hardware accelerated video playback
       # vdpauinfo
-    ];
+    # ];
   };
 
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-    settings = {
-      General = {
-        experimental = true;
-        Privacy = "device";
-        JustWorksRepairing = "always";
-        Class = "0x000100";
-        FastConnectable = true;
-      };
-    };
-  };
+  # hardware.bluetooth = {
+  #   enable = true;
+  #   powerOnBoot = true;
+  #   settings = {
+  #     General = {
+  #       experimental = true;
+  #       Privacy = "device";
+  #       JustWorksRepairing = "always";
+  #       Class = "0x000100";
+  #       FastConnectable = true;
+  #     };
+  #   };
+  # };
 
   # xbox controller support
   hardware.xpadneo.enable = true;
 
   hardware.nvidia = {
     modesetting.enable = true;
-    open = false;
+    open = true;
     # package = config.boot.kernelPackages.nvidiaPackages.stable;
-    powerManagement.enable = false;
+    # powerManagement.enable = false;
     nvidiaSettings = true;
     prime = {
       # sync.enable = true;
@@ -100,9 +101,9 @@ in
   hardware.enableRedistributableFirmware=true;
   boot = {
 # https://wiki.nixos.org/wiki/Intel_Graphics#12th_Gen_(Alder_Lake)
-    kernelParams = [ "i915.force_probe=46a6" 
-      "i915.enable_guc=3"
-    ];
+    # kernelParams = [ "i915.force_probe=46a6" 
+    #   "i915.enable_guc=3"
+    # ];
     # kernelModules = [
       # "i915" # load intel gpu early for flicker free plymouth
     # ];

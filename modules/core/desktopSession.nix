@@ -23,38 +23,39 @@
   };
 
   services = {
-    displayManager.autoLogin = {
-      enable = true;
-      user = "dex";
-    };
+    # displayManager.autoLogin = {
+    #   enable = true;
+    #   user = "dex";
+    # };
+
+    displayManager.gdm.enable=true;
     xserver = {
       enable = true;
       autoRepeatDelay = 200;
       autoRepeatInterval = 35;
 
 
-      displayManager.lightdm.enable=true;
-      displayManager.sessionCommands = ''
-        xset s off
-        xset -dpms
-        xset s noblank
-      '';
-      xautolock = {
-        enable = true;
-        locker = "${pkgs.slock}/bin/slock";
-        notifier = "${pkgs.libnotify}/bin/notify-send 'locking shortly'";
-      };
+      # displayManager.sessionCommands = ''
+      #   xset s off
+      #   xset -dpms
+      #   xset s noblank
+      # '';
+      # xautolock = {
+      #   enable = true;
+      #   locker = "${pkgs.slock}/bin/slock";
+      #   notifier = "${pkgs.libnotify}/bin/notify-send 'locking shortly'";
+      # };
 
       xkb = {
         layout = "gb";
         variant = "";
       };
     };
-    picom = {
-      enable = true;
-      backend = "glx";
-      vSync = true;
-    };
+    # picom = {
+      # enable = true;
+      # backend = "glx";
+      # vSync = true;
+    # };
   };
 
   environment.systemPackages = [
@@ -65,7 +66,8 @@
     pkgs.xwallpaper
     pkgs.libxinerama
     pkgs.xclip
-    (pkgs.callPackage ./stremio-linux-shell.nix {})
+    # (pkgs.callPackage ./stremio-linux-shell.nix {})
+    # pkgs.stremio-linux-shell
     pkgs.teamspeak6-client
     pkgs.vim
     pkgs.wget
@@ -108,5 +110,6 @@
     pkgs.st
     pkgs.acpi
     pkgs.pkg-config
-  ];
+    pkgs.stremio-linux-shell
+    ];
 }

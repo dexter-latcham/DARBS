@@ -110,7 +110,6 @@
       go-grip
       eclint
       editorconfig-checker
-      mountpoint-s3
       typos
       gallery-dl
       awscli2
