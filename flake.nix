@@ -1,66 +1,47 @@
 {
-  description = "Dexters nix config";
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
-    dwm.url = "github:dexter-latcham/dwm";
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    stylix = {
-      url = "github:nix-community/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
+    impermanence.url = "github:nix-community/impermanence";
+    persist-retro.url = "github:Geometer1729/persist-retro";
+
     disko = {
       url = "github:nix-community/disko";
-      # inputs.nixpkgs.follows = "nixpkgs";
-
-    };
-
-    impermanence = {
-      url = "github:nix-community/impermanence";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nixcord = {
-      url = "github:FlameFlag/nixcord";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    spicetify-nix = {
-      url = "github:Gerg-L/spicetify-nix";
-      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-auto-follow = {
-      url = "github:fzakaria/nix-auto-follow";
+    nix-index-database = {
+      url = "github:Mic92/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pia = {
-      url = "github:mrehanabbasi/pia.nix";
+
+    wrappers.url = "github:Lassulus/wrappers";
+    wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
+
+    hjem = {
+      url = "github:feel-co/hjem";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-flatpak.url = "github:gmodena/nix-flatpak";
-    nox = {
-      url = "github:madsbv/nix-options-search";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+
+    dwm.url = "github:dexter-latcham/dwm";
   };
-  outputs = {
-    self,
-    nixpkgs,
-    ...
-  } @ inputs: let
-    username = "dex";
-    system = "x86_64-linux";
-    host = "nixtop";
-  in {
-    nixosConfigurations.nixtop = nixpkgs.lib.nixosSystem {
-        inherit system;
-        modules = [
-          ./hosts/laptop
-        ];
-        specialArgs = {
-          inherit self inputs username host;
-        };
-      };
-    };
+
+  # Import all .nix files from current directory except flake.nix recursively
+  outputs = inputs: let
+    inherit (inputs.nixpkgs) lib;
+    inherit (lib.fileset) toList fileFilter;
+
+    isNixModule = file:
+      file.hasExt "nix"
+      && file.name != "flake.nix"
+      && !lib.hasPrefix "_" file.name;
+
+    importTree = path:
+      toList (fileFilter isNixModule path);
+
+    mkFlake = inputs.flake-parts.lib.mkFlake {inherit inputs;};
+  in
+    mkFlake {imports = importTree ./.;};
 }
